@@ -8,12 +8,12 @@
 </head>
 <body class="min-h-screen bg-emerald-50 text-slate-900">
     <header class="bg-emerald-900 px-6 py-5 text-white">
-        <div class="mx-auto max-w-4xl"><h1 class="text-2xl font-bold">Crop Disease Detection</h1><p class="text-emerald-100">Deep learning research prototype</p></div>
+        <div class="mx-auto max-w-4xl"><h1 class="text-2xl font-bold">Crop Disease Detection</h1><p class="text-emerald-100">Pretrained MobileNetV2 leaf analysis</p></div>
     </header>
     <main class="mx-auto max-w-4xl px-4 py-12">
         <section class="rounded-2xl bg-white p-6 shadow-sm sm:p-10">
             <h2 class="text-2xl font-semibold">Analyze a crop leaf</h2>
-            <p class="mt-2 text-slate-600">Upload a clear JPG, PNG, or WebP image (maximum 5 MB). Predictions will be available after model training and evaluation.</p>
+            <p class="mt-2 text-slate-600">Upload a clear image of one leaf. JPG, PNG or WebP, up to 5 MB. Initial model supports PlantVillage classes; cassava support is planned separately.</p>
             @if(session('notice'))
                 <div role="status" class="mt-5 rounded-lg bg-amber-50 p-4 text-amber-900">{{ session('notice') }}</div>
             @endif
@@ -21,10 +21,23 @@
                 <div role="alert" class="mt-5 rounded-lg bg-red-50 p-4 text-red-800">{{ $errors->first() }}</div>
             @endif
             @if(session('prediction'))
-                <div role="status" class="mt-5 rounded-lg bg-emerald-50 p-4 text-emerald-900">
-                    <strong>Prediction:</strong> {{ session('prediction')['label'] ?? 'Unknown' }}
-                    @if(isset(session('prediction')['confidence']))
-                        ({{ round(session('prediction')['confidence'] * 100, 1) }}% confidence)
+                @php($result = session('prediction'))
+                <div role="status" class="mt-5 rounded-lg bg-emerald-50 p-5 text-emerald-950">
+                    <h3 class="text-lg font-semibold">Analysis result</h3>
+                    <p class="mt-2"><strong>Prediction:</strong> {{ str_replace(['___', '_'], [' — ', ' '], $result['label'] ?? 'Unknown') }}</p>
+                    @if(isset($result['confidence']))
+                        <p><strong>Model confidence:</strong> {{ round($result['confidence'] * 100, 1) }}%</p>
+                    @endif
+                    @if($result['uncertain'] ?? false)
+                        <p class="mt-2 font-medium">Uncertain result — try a clearer image or seek expert advice.</p>
+                    @endif
+                    @if(!empty($result['top_predictions']))
+                        <h4 class="mt-4 font-semibold">Top matches</h4>
+                        <ul class="mt-2 list-disc space-y-1 pl-5">
+                            @foreach($result['top_predictions'] as $match)
+                                <li>{{ str_replace(['___', '_'], [' — ', ' '], $match['label']) }} — {{ round($match['confidence'] * 100, 1) }}%</li>
+                            @endforeach
+                        </ul>
                     @endif
                 </div>
             @endif
@@ -35,7 +48,7 @@
                 <img id="preview" alt="Selected crop leaf" class="hidden max-h-80 w-full rounded-lg object-contain" />
                 <button type="submit" class="rounded-lg bg-emerald-800 px-6 py-3 font-semibold text-white hover:bg-emerald-900">Analyze leaf</button>
             </form>
-            <p class="mt-6 text-sm text-slate-500">Research demonstration only. Do not make treatment decisions from an unverified model prediction.</p>
+            <p class="mt-6 text-sm text-slate-500">Results are predictions, not a confirmed diagnosis. The model may perform poorly on field photographs.</p>
         </section>
     </main>
     <script>
