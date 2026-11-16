@@ -1,0 +1,131 @@
+{
+  "status": "completed",
+  "timestamp_lagos": "2026-11-16T19:37:53.809326+01:00",
+  "model": "neghani/plantvillage-mobilenetv2",
+  "model_revision": "77e6d262dca53b818f7ad1d67088700754515639",
+  "model_version": "v1.1",
+  "temperature": 0.8845188130635788,
+  "confidence_threshold": 0.5,
+  "main_py_sha256": "ad17ab65d1dac3c055a6f6cf3b3e257b333fdd0a3bfa4b11b0870d44702cd786",
+  "manifest_sha256": "3ebedf7f9d946ebc2eefb499331f442a239a43f11fe7b6ce580703f38e670c6b",
+  "dataset_doi": "https://doi.org/10.25403/UPresearchdata.20237613.v1",
+  "environment": {
+    "python": "3.12.7",
+    "torch": "2.6.0+cpu",
+    "transformers": "4.57.6",
+    "pillow": "12.3.0",
+    "numpy": "2.2.6",
+    "huggingface-hub": "0.36.2",
+    "safetensors": "0.8.0"
+  },
+  "metrics": {
+    "total": 40,
+    "correct": 18,
+    "incorrect": 22,
+    "accuracy": 0.45,
+    "wilson_95_interval": [
+      0.3070530781090492,
+      0.6017090820106794
+    ],
+    "per_class": [
+      {
+        "category": "Healthy",
+        "label": "Corn_(maize)___healthy",
+        "support": 10,
+        "correct": 4,
+        "incorrect": 6,
+        "accuracy": 0.4,
+        "precision": 0.8,
+        "recall": 0.4,
+        "f1": 0.5333333333333333
+      },
+      {
+        "category": "Common rust",
+        "label": "Corn_(maize)___Common_rust_",
+        "support": 10,
+        "correct": 8,
+        "incorrect": 2,
+        "accuracy": 0.8,
+        "precision": 0.3333333333333333,
+        "recall": 0.8,
+        "f1": 0.47058823529411764
+      },
+      {
+        "category": "Northern leaf blight",
+        "label": "Corn_(maize)___Northern_Leaf_Blight",
+        "support": 10,
+        "correct": 6,
+        "incorrect": 4,
+        "accuracy": 0.6,
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6666666666666665
+      },
+      {
+        "category": "Gray leaf spot",
+        "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+        "support": 10,
+        "correct": 0,
+        "incorrect": 10,
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    ],
+    "macro": {
+      "precision": 0.4708333333333333,
+      "recall": 0.45,
+      "f1": 0.41764705882352937
+    },
+    "weighted": {
+      "precision": 0.4708333333333333,
+      "recall": 0.45,
+      "f1": 0.41764705882352937
+    },
+    "micro": {
+      "precision": 0.45,
+      "recall": 0.45,
+      "f1": 0.45
+    },
+    "confusion_matrix": [
+      [
+        4,
+        5,
+        1,
+        0
+      ],
+      [
+        0,
+        8,
+        0,
+        2
+      ],
+      [
+        0,
+        3,
+        6,
+        1
+      ],
+      [
+        1,
+        8,
+        1,
+        0
+      ]
+    ],
+    "class_order": [
+      "Healthy",
+      "Common rust",
+      "Northern leaf blight",
+      "Gray leaf spot"
+    ],
+    "uncertain": 12,
+    "confident": 28,
+    "correct_confident": 13,
+    "confident_accuracy": 0.4642857142857143,
+    "coverage": 0.7,
+    "top3_correct": 36
+  },
+  "failure_count": 0
+}
