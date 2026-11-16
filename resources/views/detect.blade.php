@@ -3,66 +3,191 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Crop Disease Detection</title>
+    <meta name="theme-color" content="#064e3b">
+    <title>Crop Disease Detection | Leaf analysis</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-emerald-50 text-slate-900">
-    <header class="bg-emerald-900 px-6 py-5 text-white">
-        <div class="mx-auto max-w-4xl"><h1 class="text-2xl font-bold">Crop Disease Detection</h1><p class="text-emerald-100">Pretrained MobileNetV2 leaf analysis</p></div>
+<body class="min-h-screen bg-stone-50 text-slate-900 antialiased">
+    <header class="border-b border-emerald-900/10 bg-white">
+        <nav aria-label="Main navigation" class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8">
+            <a href="{{ route('detect') }}" class="flex items-center gap-3 font-bold tracking-tight text-emerald-950">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-900 text-white" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="h-6 w-6"><path d="M20 4C9 2 3 7 5 14c2 7 15 5 15-10Z"/><path d="M4 21 16 9M10 15v-5m0 5h5"/></svg>
+                </span>
+                <span>Crop Disease Detection<span class="block text-xs font-normal tracking-normal text-slate-500">Deep learning for leaf analysis</span></span>
+            </a>
+            <div class="flex gap-5 text-sm font-medium text-emerald-900"><a href="#analyze" class="hover:underline">Analyze a leaf</a><a href="#guidance" class="hover:underline">Photo guide</a></div>
+        </nav>
     </header>
-    <main class="mx-auto max-w-4xl px-4 py-12">
-        <section class="rounded-2xl bg-white p-6 shadow-sm sm:p-10">
-            <h2 class="text-2xl font-semibold">Analyze a crop leaf</h2>
-            <p class="mt-2 text-slate-600">Upload a clear image of one leaf. JPG, PNG or WebP, up to 5 MB. Initial model supports PlantVillage classes; cassava support is planned separately.</p>
-            @if(session('notice'))
-                <div role="status" class="mt-5 rounded-lg bg-amber-50 p-4 text-amber-900">{{ session('notice') }}</div>
-            @endif
-            @if($errors->any())
-                <div role="alert" class="mt-5 rounded-lg bg-red-50 p-4 text-red-800">{{ $errors->first() }}</div>
-            @endif
-            @if(session('prediction'))
-                @php($result = session('prediction'))
-                <div role="status" class="mt-5 rounded-lg bg-emerald-50 p-5 text-emerald-950">
-                    <h3 class="text-lg font-semibold">Analysis result</h3>
-                    <p class="mt-2"><strong>Prediction:</strong> {{ str_replace(['___', '_'], [' — ', ' '], $result['label'] ?? 'Unknown') }}</p>
-                    @if(isset($result['confidence']))
-                        <p><strong>Model confidence:</strong> {{ round($result['confidence'] * 100, 1) }}%</p>
-                    @endif
-                    @if($result['uncertain'] ?? false)
-                        <p class="mt-2 font-medium">Uncertain result — try a clearer image or seek expert advice.</p>
-                    @endif
-                    @if(!empty($result['top_predictions']))
-                        <h4 class="mt-4 font-semibold">Top matches</h4>
-                        <ul class="mt-2 list-disc space-y-1 pl-5">
-                            @foreach($result['top_predictions'] as $match)
-                                <li>{{ str_replace(['___', '_'], [' — ', ' '], $match['label']) }} — {{ round($match['confidence'] * 100, 1) }}%</li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </div>
-            @endif
-            <form action="{{ route('detect.analyze') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-5">
-                @csrf
-                <label for="image" class="block font-medium">Leaf image</label>
-                <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" required class="block w-full rounded-lg border border-slate-300 p-3" />
-                <img id="preview" alt="Selected crop leaf" class="hidden max-h-80 w-full rounded-lg object-contain" />
-                <button type="submit" class="rounded-lg bg-emerald-800 px-6 py-3 font-semibold text-white hover:bg-emerald-900">Analyze leaf</button>
-            </form>
-            <p class="mt-6 text-sm text-slate-500">Results are predictions, not a confirmed diagnosis. The model may perform poorly on field photographs.</p>
-        </section>
+    <main class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-16">
+        <div class="mb-10 max-w-3xl">
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">A closer look at crop health</p>
+            <h1 class="mt-4 text-4xl font-semibold leading-tight tracking-tight text-emerald-950 sm:text-5xl">One leaf. A clearer picture.</h1>
+            <p class="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600">Upload a leaf photo to explore possible crop diseases with a pretrained MobileNetV2 model.</p>
+        </div>
+        @if($errors->any())
+            <div role="alert" class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{{ $errors->first() }}</div>
+        @endif
+        <div id="client-error" role="alert" class="mb-6 hidden rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"></div>
+        <div class="grid items-start gap-7 lg:grid-cols-5">
+            <section id="analyze" class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8 lg:col-span-3">
+                <div class="flex items-center justify-between gap-3"><h2 class="text-xl font-semibold text-emerald-950">Analyze your leaf</h2><span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">Image classification</span></div>
+                <p class="mt-2 text-sm leading-6 text-slate-500">Choose a clear photo of a single leaf to get started.</p>
+                <form id="analysis-form" action="{{ route('detect.analyze') }}" method="POST" enctype="multipart/form-data" class="mt-6">
+                    @csrf
+                    <label for="crop" class="block text-sm font-semibold text-emerald-950">1. Choose your crop</label>
+                    <select id="crop" name="crop" required aria-describedby="crop-help" class="mt-2 w-full rounded-xl border border-stone-300 bg-white p-3 text-slate-900 focus:ring-2 focus:ring-emerald-600">
+                        <option value="">Select a crop</option>
+                        <option value="tomato" @selected(old('crop') === 'tomato')>Tomato</option>
+                        <option value="maize" @selected(old('crop') === 'maize')>Maize</option>
+                        <option value="cassava" @selected(old('crop') === 'cassava')>Cassava (not yet supported)</option>
+                        <option value="pepper" @selected(old('crop') === 'pepper')>Pepper (bell pepper)</option>
+                    </select>
+                    <p id="crop-help" aria-live="polite" class="mb-5 mt-2 text-sm text-slate-500">Choose a supported crop before uploading. Pepper supports bell pepper only.</p>
+                    <p class="mb-2 text-sm font-semibold text-emerald-950">2. Upload a leaf image</p>
+                    <label id="dropzone" for="image" class="relative flex min-h-64 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-emerald-200 bg-emerald-50/40 p-6 text-center transition hover:border-emerald-600 focus-within:ring-2 focus-within:ring-emerald-600">
+                        <svg class="mb-4 h-10 w-10 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></svg>
+                        <span class="font-semibold text-emerald-950">Drop your leaf image here</span>
+                        <span class="mt-1 text-sm text-slate-500">or tap to browse your files</span>
+                        <span class="mt-4 text-xs text-slate-500">JPEG, PNG or WebP · Up to 5 MB</span>
+                        <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" required class="sr-only" aria-describedby="file-info" />
+                    </label>
+                    <p id="file-info" class="mt-3 break-all text-sm text-slate-500" aria-live="polite">No image selected</p>
+                    <img id="preview" alt="Selected crop leaf" class="mt-4 hidden max-h-72 w-full rounded-xl bg-stone-100 object-contain" />
+                    <button id="submit-button" type="submit" class="mt-6 flex w-full items-center justify-center gap-3 rounded-xl bg-emerald-900 px-6 py-4 font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-wait disabled:opacity-70">
+                        <svg id="spinner" class="hidden h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" opacity=".3"/><path d="M12 3a9 9 0 0 1 9 9" stroke="currentColor" stroke-width="3"/></svg><span id="button-label">Analyze leaf</span>
+                    </button>
+                    <p id="progress" role="status" class="mt-3 text-center text-sm text-emerald-800"></p>
+                </form>
+            </section>
+            <aside class="space-y-6 lg:col-span-2">
+                @if(session('prediction'))
+                    @php($result = session('prediction'))
+                    <section role="status" class="overflow-hidden rounded-3xl border border-emerald-200 bg-white shadow-sm">
+                        <div class="bg-emerald-900 p-6 text-white"><p class="text-xs font-semibold uppercase tracking-widest text-emerald-200">Analysis complete</p><h2 class="mt-2 text-2xl font-semibold">{{ $result['uncertain'] ? 'Unable to identify confidently' : $result['disease'] }}</h2><p class="mt-1 text-emerald-100">{{ $result['crop'] }}</p></div>
+                        <div class="p-6">
+                            <div class="flex items-end justify-between gap-3"><span class="text-sm text-slate-500">{{ $result['uncertain'] ? 'Highest score for your crop' : 'Model confidence' }}</span><strong class="text-3xl text-emerald-900">{{ $result['confidence'] > 0 && $result['confidence'] < 0.0001 ? '<0.01' : number_format($result['confidence'] * 100, 2) }}<span class="text-lg">%</span></strong></div>
+                            @if($result['uncertain'])
+                                <div class="mt-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-900">
+                                    @if(($result['uncertainty_reason'] ?? null) === 'crop_conflict')
+                                        <p>The model's strongest match is outside your selected crop. This does not mean you chose the wrong crop: the model can misclassify field photos.</p>
+                                    @else
+                                        <p>The model could not confidently identify a condition for this crop.</p>
+                                    @endif
+                                    <p class="mt-2">The scores below are tentative matches, not a diagnosis. Try a close-up of one leaf against a plain background or ask an agricultural expert to confirm.</p>
+                                </div>
+                            @endif
+                            <h3 class="mt-6 text-sm font-semibold">Top {{ count($result['top_predictions']) }} possible matches for your crop{{ $result['uncertain'] ? ' (unconfirmed)' : '' }}</h3>
+                            <p class="mt-2 text-xs leading-5 text-slate-500">Scores retain the model's original confidence across all classes. They may total less than 100% because other crops are excluded.@if(($result['selected_crop'] ?? '') === 'pepper') Pepper has two supported classes.@endif</p>
+                            <ol class="mt-3 divide-y divide-stone-100">
+                                @foreach($result['top_predictions'] as $match)
+                                    <li class="flex items-start justify-between gap-4 py-3 text-sm"><span class="text-slate-600">{{ $match['display_label'] }}</span><strong class="shrink-0 text-emerald-900">{{ $match['confidence'] > 0 && $match['confidence'] < 0.0001 ? '<0.01' : number_format($match['confidence'] * 100, 2) }}%</strong></li>
+                                @endforeach
+                            </ol>
+                            @if(isset($result['model_version']))
+                                <p class="mt-4 border-t border-stone-100 pt-3 text-xs text-slate-500">MobileNetV2 {{ $result['model_version'] }} · Field-image fine-tuning · Publisher-calibrated scores</p>
+                            @endif
+                        </div>
+                    </section>
+                @else
+                    <section class="rounded-3xl bg-emerald-950 p-7 text-white"><p class="text-xs font-semibold uppercase tracking-widest text-emerald-300">From image to insight</p><h2 class="mt-3 text-2xl font-semibold">Your results appear here.</h2><p class="mt-3 text-sm leading-7 text-emerald-100">See possible leaf conditions and confidence scores for your selected crop. Up to three supported matches appear after analysis.</p><div class="mt-6 flex gap-6 border-t border-white/15 pt-5"><p><strong class="text-2xl">38</strong><span class="block text-xs text-emerald-200">PlantVillage classes</span></p><p><strong class="text-2xl">14</strong><span class="block text-xs text-emerald-200">Supported crops</span></p></div></section>
+                @endif
+                <section id="guidance" class="rounded-3xl border border-stone-200 bg-white p-6">
+                    <h2 class="font-semibold text-emerald-950">Give your photo the best chance</h2>
+                    <ul class="mt-4 space-y-3 text-sm leading-6 text-slate-600"><li>Use natural light and keep the leaf in focus.</li><li>Center one leaf against a simple background.</li><li>Show the affected area without covering the leaf.</li></ul>
+                    <p class="mt-5 border-t border-stone-100 pt-4 text-xs leading-6 text-slate-500">Choose Tomato, Maize or bell Pepper. Cassava is not supported by this model. The model cannot reliably identify unsupported plants or non-leaf images.</p>
+                </section>
+            </aside>
+        </div>
+        <p class="mt-8 max-w-3xl text-xs leading-6 text-slate-500">Predictions are not a confirmed diagnosis. Confidence is a model score, not a guarantee of accuracy. Performance can be lower on field photographs. Confirm findings with an agricultural expert before making crop management decisions.</p>
     </main>
+    <footer class="border-t border-stone-200 px-5 py-6 text-center text-xs text-slate-500">Crop Disease Detection Using Deep Learning Technique · Powered by MobileNetV2</footer>
     <script>
+        const form = document.getElementById('analysis-form');
         const input = document.getElementById('image');
+        const crop = document.getElementById('crop');
         const preview = document.getElementById('preview');
-        let objectUrl;
-        input.addEventListener('change', () => {
+        const dropzone = document.getElementById('dropzone');
+        const error = document.getElementById('client-error');
+        const button = document.getElementById('submit-button');
+        const progress = document.getElementById('progress');
+        let objectUrl, submitting = false;
+        const showError = message => { error.textContent = message; error.classList.remove('hidden'); };
+        function selectImage() {
+            error.classList.add('hidden');
             if (objectUrl) URL.revokeObjectURL(objectUrl);
             preview.classList.add('hidden');
             const file = input.files[0];
-            if (!file || !['image/jpeg','image/png','image/webp'].includes(file.type)) return;
+            document.getElementById('file-info').textContent = 'No image selected';
+            if (!file) return;
+            if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 5 * 1024 * 1024) {
+                input.value = '';
+                showError('Choose a JPEG, PNG or WebP image up to 5 MB.');
+                return;
+            }
+            document.getElementById('file-info').textContent = file.name + ' · ' + (file.size / 1024 / 1024).toFixed(2) + ' MB';
             objectUrl = URL.createObjectURL(file);
             preview.src = objectUrl;
             preview.classList.remove('hidden');
+        }
+        function updateCrop() {
+            const supported = ['tomato', 'maize', 'pepper'].includes(crop.value);
+            input.disabled = !supported || submitting;
+            button.disabled = !supported || submitting;
+            document.getElementById('crop-help').textContent = crop.value === 'cassava'
+                ? 'Cassava analysis is unavailable: this model has no Cassava classes. Choose another crop to upload.'
+                : supported ? 'Predictions will be restricted to this crop. Pepper supports bell pepper only.'
+                : 'Choose a supported crop before uploading. Pepper supports bell pepper only.';
+            dropzone.classList.toggle('opacity-50', !supported);
+        }
+        crop.addEventListener('change', () => {
+            input.value = ''; selectImage(); updateCrop();
+        });
+        updateCrop();
+        input.addEventListener('change', selectImage);
+        preview.addEventListener('error', () => { input.value = ''; preview.classList.add('hidden'); showError('This image could not be opened. Please choose another file.'); });
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(event => dropzone.addEventListener(event, e => { e.preventDefault(); e.stopPropagation(); }));
+        dropzone.addEventListener('dragover', () => dropzone.classList.add('ring-2', 'ring-emerald-600'));
+        ['dragleave', 'drop'].forEach(event => dropzone.addEventListener(event, () => dropzone.classList.remove('ring-2', 'ring-emerald-600')));
+        dropzone.addEventListener('drop', e => {
+            if (submitting || input.disabled || !e.dataTransfer.files.length) return;
+            const transfer = new DataTransfer();
+            transfer.items.add(e.dataTransfer.files[0]);
+            input.files = transfer.files;
+            selectImage();
+        });
+        function resetForm() {
+            submitting = false; crop.disabled = false; updateCrop();
+            document.getElementById('spinner').classList.add('hidden');
+            document.getElementById('button-label').textContent = 'Analyze leaf';
+            form.removeAttribute('aria-busy'); progress.textContent = '';
+        }
+        window.addEventListener('pageshow', resetForm);
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            if (submitting || !form.reportValidity()) return;
+            if (!['tomato', 'maize', 'pepper'].includes(crop.value)) { updateCrop(); return; }
+            submitting = true; button.disabled = true; input.disabled = true; crop.disabled = true;
+            error.classList.add('hidden'); form.setAttribute('aria-busy', 'true');
+            document.getElementById('spinner').classList.remove('hidden');
+            document.getElementById('button-label').textContent = 'Preparing analysis…';
+            try {
+                const deadline = Date.now() + 180000;
+                while (true) {
+                    const response = await fetch(@json(route('detect.health')), {headers: {'Accept': 'application/json'}, signal: AbortSignal.timeout(15000)});
+                    if (!response.ok) throw new Error('The AI service is unavailable. Please try again shortly.');
+                    const health = await response.json();
+                    if (health.status === 'ready') break;
+                    if (health.status !== 'loading') throw new Error('The AI model could not load. Please check the AI service logs or contact the administrator.');
+                    if (Date.now() > deadline) throw new Error('The model is taking longer to initialize. Please try again in a few minutes.');
+                    progress.textContent = 'Preparing the model. The first download may take a few minutes…';
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                }
+                progress.textContent = 'Analyzing your leaf. Please keep this page open.';
+                document.getElementById('button-label').textContent = 'Analyzing leaf…';
+                input.disabled = false; crop.disabled = false;
+                HTMLFormElement.prototype.submit.call(form);
+            } catch (e) { resetForm(); showError(e.message || 'The AI service could not be reached. Please try again.'); }
         });
     </script>
 </body>

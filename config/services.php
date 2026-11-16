@@ -37,6 +37,8 @@ return [
 
     'crop_ai' => [
         'url' => env('CROP_AI_URL', 'http://127.0.0.1:8001'),
+        'connect_timeout' => (int) env('CROP_AI_CONNECT_TIMEOUT', 5),
+        'timeout' => (int) env('CROP_AI_TIMEOUT', 120),
     ],
 
 ];
