@@ -8,17 +8,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-stone-50 text-slate-900 antialiased">
-    <header class="border-b border-emerald-900/10 bg-white">
-        <nav aria-label="Main navigation" class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8">
-            <a href="{{ route('detect') }}" class="flex items-center gap-3 font-bold tracking-tight text-emerald-950">
-                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-900 text-white" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="h-6 w-6"><path d="M20 4C9 2 3 7 5 14c2 7 15 5 15-10Z"/><path d="M4 21 16 9M10 15v-5m0 5h5"/></svg>
-                </span>
-                <span>Crop Disease Detection<span class="block text-xs font-normal tracking-normal text-slate-500">Deep learning for leaf analysis</span></span>
-            </a>
-            <div class="flex gap-5 text-sm font-medium text-emerald-900"><a href="#analyze" class="hover:underline">Analyze a leaf</a><a href="#guidance" class="hover:underline">Photo guide</a></div>
-        </nav>
-    </header>
+    @include('partials.navigation')
     <main class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-16">
         <div class="mb-10 max-w-3xl">
             <p class="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">A closer look at crop health</p>
@@ -90,7 +80,7 @@
                         </div>
                     </section>
                 @else
-                    <section class="rounded-3xl bg-emerald-950 p-7 text-white"><p class="text-xs font-semibold uppercase tracking-widest text-emerald-300">From image to insight</p><h2 class="mt-3 text-2xl font-semibold">Your results appear here.</h2><p class="mt-3 text-sm leading-7 text-emerald-100">See possible leaf conditions and confidence scores for your selected crop. Up to three supported matches appear after analysis.</p><div class="mt-6 flex gap-6 border-t border-white/15 pt-5"><p><strong class="text-2xl">38</strong><span class="block text-xs text-emerald-200">PlantVillage classes</span></p><p><strong class="text-2xl">14</strong><span class="block text-xs text-emerald-200">Supported crops</span></p></div></section>
+                    <section class="rounded-3xl bg-emerald-950 p-7 text-white"><p class="text-xs font-semibold uppercase tracking-widest text-emerald-300">From image to insight</p><h2 class="mt-3 text-2xl font-semibold">Your results appear here.</h2><p class="mt-3 text-sm leading-7 text-emerald-100">See possible leaf conditions and confidence scores for your selected crop. Up to three supported matches appear after analysis.</p><div class="mt-6 flex gap-6 border-t border-white/15 pt-5"><p><strong class="text-2xl">16</strong><span class="block text-xs text-emerald-200">Supported classes</span></p><p><strong class="text-2xl">3</strong><span class="block text-xs text-emerald-200">Supported crops</span></p></div></section>
                 @endif
                 <section id="guidance" class="rounded-3xl border border-stone-200 bg-white p-6">
                     <h2 class="font-semibold text-emerald-950">Give your photo the best chance</h2>
@@ -175,6 +165,7 @@
                 const deadline = Date.now() + 180000;
                 while (true) {
                     const response = await fetch(@json(route('detect.health')), {headers: {'Accept': 'application/json'}, signal: AbortSignal.timeout(15000)});
+                    if (response.status === 401) throw new Error('Your session has expired. Please log in again before analyzing a leaf.');
                     if (!response.ok) throw new Error('The AI service is unavailable. Please try again shortly.');
                     const health = await response.json();
                     if (health.status === 'ready') break;

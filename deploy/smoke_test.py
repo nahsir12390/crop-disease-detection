@@ -12,6 +12,7 @@ import subprocess
 import time
 import urllib.error
 import urllib.request
+import urllib.parse
 import uuid
 
 
@@ -52,9 +53,19 @@ def main(image, memory, cpus):
         print('PASS: custom public PORT, Laravel, SQLite and offline model readiness', flush=True)
 
         client = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
-        with client.open(url + '/', timeout=15) as response:
+        with client.open(url + '/register', timeout=15) as response:
             html = response.read().decode()
         token = re.search(r'name="_token" value="([^"]+)"', html).group(1)
+        password = uuid.uuid4().hex
+        registration = urllib.parse.urlencode({'_token': token, 'name': 'Container test',
+                                               'email': f'{uuid.uuid4().hex}@example.test',
+                                               'password': password, 'password_confirmation': password}).encode()
+        with client.open(urllib.request.Request(url + '/register', data=registration,
+                                               headers={'Referer': url + '/register'}), timeout=30) as response:
+            html = response.read().decode()
+        assert 'analysis-form' in html and 'Logout' in html, 'Registered user could not access portal'
+        token = re.search(r'name="_token" value="([^"]+)"', html).group(1)
+        print('PASS: real account registration and authenticated portal', flush=True)
         # Public real PlantVillage photo, pinned to an immutable dataset commit.
         photo_url = ('https://raw.githubusercontent.com/spMohanty/PlantVillage-Dataset/'
                      '7f7ecc7e1eaca78107e3affe7cb5abd9427e139a/raw/color/Tomato___Early_blight/'

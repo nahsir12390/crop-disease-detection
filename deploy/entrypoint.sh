@@ -31,6 +31,7 @@ if [ -f "$DATA_DIR/app.key" ]; then chmod 600 "$DATA_DIR/app.key"; fi
 # Persistent disks are mounted only at runtime, not in Render pre-deploy jobs.
 php artisan config:cache
 php artisan migrate --force --no-interaction
+php artisan app:bootstrap-admin --no-interaction
 chown -R www-data:www-data "$DATA_DIR" storage bootstrap/cache
 envsubst '${PORT}' < deploy/nginx.conf.template > /etc/nginx/sites-available/default
 nginx -t

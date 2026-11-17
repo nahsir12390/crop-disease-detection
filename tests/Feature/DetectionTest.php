@@ -2,12 +2,22 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class DetectionTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->actingAs(User::factory()->create());
+    }
+
     private function leaf()
     {
         return UploadedFile::fake()->createWithContent('leaf.png', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='));
@@ -19,22 +29,22 @@ class DetectionTest extends TestCase
             'crop' => 'Tomato', 'disease' => 'Early blight', 'confidence' => .85];
         Http::fake(['*/predict' => Http::response([...$match, 'uncertain' => false, 'selected_crop' => 'tomato',
             'top_predictions' => [$match, [...$match, 'confidence' => .10], [...$match, 'confidence' => .05]]])]);
-        $this->from('/')->post('/detect', ['crop' => 'tomato', 'image' => $this->leaf()])->assertRedirect('/')->assertSessionHas('prediction');
-        $this->get('/')->assertSee('Early blight')->assertSee('85.0');
+        $this->from('/portal')->post('/detect', ['crop' => 'tomato', 'image' => $this->leaf()])->assertRedirect('/portal')->assertSessionHas('prediction');
+        $this->get('/portal')->assertSee('Early blight')->assertSee('85.0');
         Http::assertSent(fn ($request) => str_ends_with($request->url(), '/predict') && $request->hasFile('file') && collect($request->data())->contains(fn ($part) => $part['name'] === 'crop' && $part['contents'] === 'tomato'));
     }
 
     public function test_model_failure_is_not_reported_as_untrained(): void
     {
         Http::fake(['*/predict' => Http::response(['detail' => 'Unavailable'], 503)]);
-        $this->from('/')->post('/detect', ['crop' => 'tomato', 'image' => $this->leaf()])->assertSessionHasErrors('image');
-        $this->get('/')->assertSee('still initializing or could not load')->assertDontSee('not trained');
+        $this->from('/portal')->post('/detect', ['crop' => 'tomato', 'image' => $this->leaf()])->assertSessionHasErrors('image');
+        $this->get('/portal')->assertSee('still initializing or could not load')->assertDontSee('not trained');
     }
 
     public function test_malformed_result_is_rejected(): void
     {
         Http::fake(['*/predict' => Http::response(['label' => 'invalid'])]);
-        $this->from('/')->post('/detect', ['crop' => 'tomato', 'image' => $this->leaf()])->assertSessionHasErrors('image')->assertSessionMissing('prediction');
+        $this->from('/portal')->post('/detect', ['crop' => 'tomato', 'image' => $this->leaf()])->assertSessionHasErrors('image')->assertSessionMissing('prediction');
     }
 
     public function test_health_reports_loading(): void
@@ -54,7 +64,7 @@ class DetectionTest extends TestCase
     {
         Http::fake();
         foreach ([null, 'potato', 'cassava'] as $crop) {
-            $this->from('/')->post('/detect', ['crop' => $crop, 'image' => $this->leaf()])->assertSessionHasErrors('crop');
+            $this->from('/portal')->post('/detect', ['crop' => $crop, 'image' => $this->leaf()])->assertSessionHasErrors('crop');
         }
         Http::assertNothingSent();
     }
@@ -65,8 +75,8 @@ class DetectionTest extends TestCase
             'crop' => 'Pepper, bell', 'disease' => 'Healthy', 'confidence' => .8];
         Http::fake(['*/predict' => Http::response([...$match, 'uncertain' => false, 'selected_crop' => 'pepper',
             'top_predictions' => [$match, [...$match, 'label' => 'Pepper,_bell___Bacterial_spot', 'confidence' => .1]]])]);
-        $this->from('/')->post('/detect', ['crop' => 'pepper', 'image' => $this->leaf()])->assertSessionHas('prediction');
-        $this->get('/')->assertSee('Top 2 possible matches')->assertSee('value="pepper" selected', false);
+        $this->from('/portal')->post('/detect', ['crop' => 'pepper', 'image' => $this->leaf()])->assertSessionHas('prediction');
+        $this->get('/portal')->assertSee('Top 2 possible matches')->assertSee('value="pepper" selected', false);
     }
 
     public function test_predictions_for_another_crop_are_rejected(): void
@@ -75,7 +85,7 @@ class DetectionTest extends TestCase
             'crop' => 'Potato', 'disease' => 'Early blight', 'confidence' => .85];
         Http::fake(['*/predict' => Http::response([...$match, 'uncertain' => false, 'selected_crop' => 'tomato',
             'top_predictions' => [$match]])]);
-        $this->from('/')->post('/detect', ['crop' => 'tomato', 'image' => $this->leaf()])->assertSessionHasErrors('image')->assertSessionMissing('prediction');
+        $this->from('/portal')->post('/detect', ['crop' => 'tomato', 'image' => $this->leaf()])->assertSessionHasErrors('image')->assertSessionMissing('prediction');
     }
 
     public function test_weak_crop_match_is_presented_as_unconfirmed(): void
@@ -84,8 +94,8 @@ class DetectionTest extends TestCase
             'crop' => 'Tomato', 'disease' => 'Early blight', 'confidence' => .00086958];
         Http::fake(['*/predict' => Http::response([...$match, 'uncertain' => true, 'selected_crop' => 'tomato',
             'uncertainty_reason' => 'crop_conflict', 'top_predictions' => [$match]])]);
-        $this->from('/')->post('/detect', ['crop' => 'tomato', 'image' => $this->leaf()])->assertSessionHas('prediction');
-        $this->get('/')->assertSee('Unable to identify confidently')->assertSee('0.09')
+        $this->from('/portal')->post('/detect', ['crop' => 'tomato', 'image' => $this->leaf()])->assertSessionHas('prediction');
+        $this->get('/portal')->assertSee('Unable to identify confidently')->assertSee('0.09')
             ->assertSee('tentative matches, not a diagnosis')->assertSee('outside your selected crop')
             ->assertDontSee('Pepper has two supported classes.');
     }

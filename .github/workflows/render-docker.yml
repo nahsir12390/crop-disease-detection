@@ -20,6 +20,11 @@ on:
       - config/**
       - app/Http/Controllers/**
       - app/Providers/**
+      - app/Models/**
+      - app/Console/**
+      - app/Http/Middleware/**
+      - routes/**
+      - database/migrations/**
       - resources/**
       - .github/workflows/render-docker.yml
 

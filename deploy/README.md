@@ -6,6 +6,8 @@ The container runs Nginx, PHP-FPM/Laravel and loopback-only FastAPI/MobileNetV2.
 
 ## Deploy on Render
 
+The site now includes registration/login and an administrator dashboard. Before deploying, see [account and admin setup](../docs/accounts-and-admin.md). Set optional `ADMIN_EMAIL` and `ADMIN_PASSWORD` in Render to provision the owner's administrator automatically; no shell is needed. Contact messages are stored in the temporary SQLite database. The public home page remains accessible, and leaf analysis requires login.
+
 1. Open https://dashboard.render.com and choose **New ? Blueprint**.
 2. Connect the existing GitHub repository `nahsir12390/crop-disease-detection`.
 3. Select branch **feature/crop-detection-foundation**, Blueprint path **render.yaml**, and the repository root directory.

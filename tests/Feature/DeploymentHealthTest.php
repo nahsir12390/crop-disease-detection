@@ -39,6 +39,6 @@ class DeploymentHealthTest extends TestCase
     {
         config(['app.force_https' => true]);
         (new AppServiceProvider($this->app))->boot();
-        $this->get('/')->assertOk()->assertSee('https://localhost/detect', false);
+        $this->get('/')->assertOk()->assertSee('https://localhost/register', false);
     }
 }
