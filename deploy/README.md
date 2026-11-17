@@ -60,6 +60,15 @@ Nginx exposes only Render's public port. Python binds 127.0.0.1:8001; PHP-FPM bi
 
 ## Docker verification
 
+Verified on 17 November 2026 in [GitHub Actions run 44103724935](https://github.com/nahsir12390/crop-disease-detection/actions/runs/44103724935), using commit `b711a7a`:
+
+- Linux Docker build, dependency checks, pinned model loading and warm-up passed.
+- Both the standard container check and the separate **512 MiB / 0.1 CPU** check passed readiness and a real, CSRF-protected photo upload through Laravel to MobileNetV2.
+- Memory sampled after prediction was **321.9 MiB / 512 MiB** in the constrained check. This is a sample, not peak memory or a concurrent-load measurement.
+- SQLite contents and the generated key survived restart with the test volume. The free Render configuration does **not** attach that volume and does not promise persistence.
+
+These checks verify the container, not a live Render deployment. After creating the Render service, verify its public HTTPS URL and upload a real image there. Larger uploads and simultaneous users still need capacity testing.
+
 This preparation machine has no Docker daemon/WSL installation. Linux verification runs in `.github/workflows/render-docker.yml`: image build/model warm-up, a real photo upload through Laravel, and SQLite/key preservation when restarting a container with a test volume. The independent free-sized assessment caps memory at 512 MiB and CPU at 0.1. These are real inference checks, not mocked predictions. Check their actual results before claiming a size is verified.
 
 With Docker available locally:

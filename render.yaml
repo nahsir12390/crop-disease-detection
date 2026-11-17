@@ -1,5 +1,5 @@
 # Default: free temporary demo. SQLite and generated key reset on restart/redeploy.
-# The 512 MiB free instance may be too small for PyTorch. Not a verified free-hosting promise.
+# A 512 MiB / 0.1 CPU single-upload CI test passed; concurrent capacity is not established.
 services:
   - type: web
     name: crop-disease-detection
