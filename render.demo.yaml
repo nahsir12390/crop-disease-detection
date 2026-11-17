@@ -1,0 +1,24 @@
+# Temporary/free experiment only: SQLite and generated key are lost on restart.
+# The 512 MiB free instance may be too small for PyTorch. Not a verified free-hosting promise.
+services:
+  - type: web
+    name: crop-disease-demo
+    runtime: docker
+    branch: feature/crop-detection-foundation
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    region: frankfurt
+    healthCheckPath: /healthz
+    autoDeployTrigger: "off"
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+      - key: DB_DATABASE
+        value: /var/data/database.sqlite
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: FORCE_HTTPS
+        value: "true"
+      - key: TRUSTED_PROXIES
+        value: "*"
