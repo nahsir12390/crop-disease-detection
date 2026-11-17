@@ -82,9 +82,10 @@ def main(image, memory, cpus):
         body += (f'--{boundary}\r\nContent-Disposition: form-data; name="image"; filename="leaf.jpg"\r\n'
                  'Content-Type: image/jpeg\r\n\r\n').encode() + photo + f'\r\n--{boundary}--\r\n'.encode()
         request = urllib.request.Request(url + '/detect', data=body,
-                                         headers={'Content-Type': f'multipart/form-data; boundary={boundary}', 'Referer': url + '/'})
+                                         headers={'Content-Type': f'multipart/form-data; boundary={boundary}', 'Referer': url + '/portal'})
         with client.open(request, timeout=150) as response:
             html = response.read().decode()
+            assert urllib.parse.urlsplit(response.url).path == '/portal', 'Prediction did not return to the portal'
         assert 'Analysis complete' in html and 'MobileNetV2 v1.1' in html, 'Real prediction was not rendered'
         print('PASS: CSRF/session multipart upload through Nginx and Laravel to actual model', flush=True)
         print('Container memory:', docker('stats', '--no-stream', '--format', '{{.MemUsage}}', name), flush=True)
