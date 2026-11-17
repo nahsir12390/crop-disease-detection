@@ -1,97 +1,93 @@
-# Render deployment with SQLite
+# Render deployment: free temporary SQLite demo
 
-This deploys the existing project as **one Docker web service**: Nginx → PHP-FPM/Laravel → loopback-only FastAPI/MobileNetV2. No Render Postgres, Redis or second AI service is created. The browser never accesses the Python port directly.
+The default `render.yaml` deploys the existing project as **one free Docker web service**, with SQLite and no persistent disk. This follows the requested temporary-demo approach: data/session resets on rebuild/restart/spin-down are accepted. No Postgres resource or separate AI service is required.
 
-## Cost and durability: choose one
+The container runs Nginx, PHP-FPM/Laravel and loopback-only FastAPI/MobileNetV2. The verified model files are baked into the Docker image, so a container restart does not need to download the model again. SQLite is initialized and migrated automatically when absent.
 
-**Recommended: `render.yaml`.** One paid `1c-2g` compute instance (2 GB RAM) and a 1 GB persistent disk mounted at `/var/data`. SQLite and its generated application key survive restarts/redeploys. This avoids paying for a Postgres database, **not all hosting costs**. Check the prices shown by Render before creating resources. The RAM recommendation is a starting point, not a measured cloud capacity guarantee; PyTorch and full-resolution leaf images can use substantial memory.
+## Deploy on Render
 
-**Optional: `render.demo.yaml`.** Free compute, no disk. It is only a temporary experiment: SQLite, sessions and the generated key disappear on restart/redeploy/spin-down. Render free instances currently have 512 MiB RAM and spin down when idle. This may be insufficient for the combined Python/PHP application; free deployment is not promised to work. Do not rely on it for a presentation without testing. If the logs show out-of-memory/SIGKILL, increase RAM, not the timeout.
+1. Open https://dashboard.render.com and choose **New ? Blueprint**.
+2. Connect the existing GitHub repository `nahsir12390/crop-disease-detection`.
+3. Select branch **feature/crop-detection-foundation**, Blueprint path **render.yaml**, and the repository root directory.
+4. Review the proposed service. The default is **Free**, with no disk and no Postgres database. Create the service when ready; preparing/pushing these files has not created a Render service.
+5. Leave Dockerfile path `./Dockerfile`. Do not add native Node/Python build/start commands or override the Docker command.
+6. Wait for the Docker build. It installs dependencies, compiles frontend assets, downloads the pinned model and performs an actual model warm-up. A failed download/load fails the build.
+7. Startup creates missing SQLite/key files, runs migrations, and starts the managed services. Render waits for `/healthz` to report ready.
+8. When Live, open the HTTPS URL Render provides. Select Maize, upload a real photo and verify results. The AI port is internal; do not configure a second public API URL.
 
-Use **one** Blueprint, not both. Neither has a `databases:` section.
+No manually entered environment variables or model account/API key are required for the default onrender.com domain. `APP_URL` is taken from Render's `RENDER_EXTERNAL_URL`; an application key is generated at startup and saved with the temporary database. For a custom domain, set `APP_URL` to the exact HTTPS origin and redeploy.
 
-## Deploy through the Render dashboard
+Auto-deploy is deliberately **off**. After reviewing an update, use **Manual Deploy ? Deploy latest commit**. Deploy the feature branch directly; merging into main is unnecessary.
 
-1. Ensure `Dockerfile`, `.dockerignore`, `deploy/`, `render.yaml`, `package-lock.json`, and the associated Laravel health/HTTPS changes are pushed to `feature/crop-detection-foundation` in the existing repository.
-2. Sign in at https://dashboard.render.com and connect the GitHub account/repository `nahsir12390/crop-disease-detection`.
-3. Choose **New → Blueprint**, select the existing repository and branch, and use Blueprint path **render.yaml**. To deliberately try the temporary option instead, select **render.demo.yaml**.
-4. Inspect the proposed compute/disk costs and create the resources only when you accept them. This preparation has not created any Render resources or incurred Render charges.
-5. Leave the root directory at the repository root. Runtime is Docker; Dockerfile path is `./Dockerfile`. Do not add Node/Python native-runtime build/start commands or a pre-deploy migration command.
-6. The Docker build installs CPU PyTorch, PHP dependencies and frontend assets, then downloads and actually loads the pinned model. A failed model download/load fails the image build instead of producing fabricated predictions.
-7. At container startup, the entrypoint initializes missing SQLite/key files, caches runtime configuration, runs migrations against the mounted disk, validates Nginx and starts the three managed processes.
-8. Wait for Render to mark **Live**. Open the HTTPS URL supplied by Render. `/healthz` must return `{"status":"ready"}`. `/up` is basic Laravel liveness; it alone does not establish AI readiness.
-9. Select Maize and upload a real leaf. Verify the preview, results and top matches. Remember the model's measured field accuracy is 45%; successful hosting does not improve that accuracy.
+## Free-instance limits
 
-Auto-deploy is deliberately **off** in the Blueprints. After reviewing a code update, use **Manual Deploy → Deploy latest commit**. This avoids unintended redeploys during a presentation. Do not merge into `main` just to deploy: the feature branch is explicitly selected.
+The default has no persistent storage: SQLite, session files and the generated application key reset when Render replaces the container. Refresh an old browser page after a restart if it has a stale CSRF/session token. There are no permanent diagnosis records or uploaded-photo history in the current application.
 
-## Environment variables
+The public model itself stays in the Docker image and loads offline on each boot. First image builds still require Hugging Face and package-download connectivity.
 
-The image and Blueprint supply production defaults:
+Render's free size is currently 512 MiB RAM and 0.1 CPU, and idle services spin down. A separate CI check assesses those resource limits, but one small upload is not a load/capacity guarantee for large field photos or concurrent visitors. Inspect the **free-sized check's own result**, not just an overall green workflow: that assessment is non-blocking. If Python is killed/out-of-memory, increase compute RAM or use a separately hosted AI service. Increasing timeouts does not fix a memory shortage.
 
-| Variable | Value / behavior |
+## Optional durable configuration
+
+If persistence is wanted later, use **render.persistent.yaml** instead. It selects a paid `1c-2g` instance and a 1 GB disk at `/var/data`, still without Postgres. It stores SQLite and the generated key there and uses database-backed sessions/cache. Review Render's current compute/disk charges before choosing it. Use one Blueprint, not both.
+
+Do not mount over `/app`. Keep one instance: SQLite on a mounted disk is not a horizontally shared database. Migrations run at startup because the disk is unavailable during builds/pre-deploy jobs. Existing databases are never truncated and `migrate:fresh` is never used.
+
+For important persistent data, use SQLite's backup API and keep an off-service copy of the database and key. Copying only database.sqlite while WAL is active can omit transactions.
+
+## Runtime configuration
+
+| Setting | Default / behavior |
 | --- | --- |
 | APP_ENV / APP_DEBUG | production / false |
-| DB_CONNECTION | sqlite, enforced by startup |
-| DATA_DIR / DB_DATABASE | /var/data / /var/data/database.sqlite |
-| SESSION_DRIVER / CACHE_STORE | database / database; migrated automatically |
-| QUEUE_CONNECTION | sync; no queue worker needed |
-| CROP_AI_URL | http://127.0.0.1:8001; internal API, no public URL needed |
-| PORT | Provided by Render; defaults to 10000 locally |
-| APP_URL | Automatically taken from RENDER_EXTERNAL_URL unless explicitly set |
-| FORCE_HTTPS / SESSION_SECURE_COOKIE | true / true |
-| TRUSTED_PROXIES | `*` for this Render-managed reverse-proxy deployment only; unset locally |
-| HF_HOME / HF_HUB_OFFLINE | /opt/models / 1; verified model baked into image |
-| APP_KEY | Optional explicit Laravel base64 key; otherwise generated once and saved at /var/data/app.key |
+| DB_CONNECTION / DB_DATABASE | sqlite / /var/data/database.sqlite |
+| DATA_DIR | /var/data; temporary on free, mounted disk in optional persistent setup |
+| SESSION_DRIVER / CACHE_STORE | file / file on free; database / database in persistent option |
+| QUEUE_CONNECTION | sync; no worker required |
+| CROP_AI_URL | http://127.0.0.1:8001, internal only |
+| PORT | Set by Render; default 10000 locally |
+| APP_URL | Render's public URL unless explicitly supplied |
+| FORCE_HTTPS / SESSION_SECURE_COOKIE | true / true on Render |
+| TRUSTED_PROXIES | `*` for the Render-managed reverse proxy, unset in local development |
+| HF_HOME / HF_HUB_OFFLINE | /opt/models / 1; pinned model baked into image |
+| APP_KEY | Optional explicit valid Laravel key; otherwise generated and stored at /var/data/app.key |
 
-No `.env` or credentials are copied into the image. No APP_KEY is embedded at build time. For the persistent configuration, you do not need to type a key: it is created on the mounted disk and reused. Never publish, log or casually change it. If you choose to supply APP_KEY yourself, use a genuine Laravel AES-256 key (`base64:` plus 32 random bytes); Render's generic random-string generator is not automatically a correctly formatted Laravel key.
+No local .env or credentials are copied into the image. A supplied APP_KEY must be a genuine Laravel AES-256 key (`base64:` plus 32 random bytes), not an arbitrary random string. Keep it stable if opting into persistent data.
 
-For a custom domain, set APP_URL to its complete HTTPS origin, e.g. `https://crop.example.com`, then redeploy. With the default onrender.com domain, Render supplies the URL automatically. HTTPS form/health URLs and secure cookies are required to avoid mixed-content and session/CSRF errors.
+Nginx exposes only Render's public port. Python binds 127.0.0.1:8001; PHP-FPM binds 127.0.0.1:9000. PHP execution is limited to the Laravel front controller. The 5 MiB upload limit is reflected in Nginx/PHP/Laravel. HTTPS form/health URLs and proxy-aware secure cookies avoid mixed-content/session problems.
 
-## Persistent SQLite rules
+`/up` checks Laravel liveness only. `/healthz` checks SQLite connectivity and actual AI readiness, returning 503 while unavailable; it does not create database sessions. Production errors are logged instead of shown in the browser. The model's previously measured 45% maize field accuracy is unchanged by deployment.
 
-- The disk path must be `/var/data`, matching the Blueprint. Data outside that mount is ephemeral. Do not mount the whole `/app` directory over the source.
-- Keep one instance. A local SQLite database on one mounted disk is not a shared, horizontally scalable database. Disk-backed deploys can involve a short interruption.
-- The entrypoint creates a database **only if absent**. It never truncates or reseeds an existing one and never uses `migrate:fresh`.
-- Migrations run at runtime because the disk is not available during builds or pre-deploy jobs.
-- The database uses a busy timeout and WAL mode. If backing it up live, use SQLite's backup API; copying only database.sqlite while WAL is active can omit transactions. Keep an off-service copy of the database and application key for anything important.
-- Uploaded leaf photos and result history are not permanently saved by the current application. SQLite mainly stores standard Laravel/session/cache tables.
+## Docker verification
 
-## Security and resource limits
+This preparation machine has no Docker daemon/WSL installation. Linux verification runs in `.github/workflows/render-docker.yml`: image build/model warm-up, a real photo upload through Laravel, and SQLite/key preservation when restarting a container with a test volume. The independent free-sized assessment caps memory at 512 MiB and CPU at 0.1. These are real inference checks, not mocked predictions. Check their actual results before claiming a size is verified.
 
-Nginx exposes only the public `$PORT`; FastAPI is bound to 127.0.0.1:8001 and PHP-FPM to 127.0.0.1:9000. PHP execution is limited to the Laravel front controller. Production errors go to logs, not the browser. No user-uploaded files are executable. Nginx/PHP/Laravel all enforce compatible upload limits.
-
-There is one AI worker, bounded numerical thread counts, and three on-demand PHP workers. This is a low-volume prototype deployment, not a load-tested public diagnosis service. Monitor actual memory/CPU usage before inviting many users. Sessionless readiness checks verify both SQLite connectivity and a genuinely ready model, returning 503 while unavailable.
-
-## Local Docker verification (requires Docker Desktop or Linux Docker)
+With Docker available locally:
 
 ```powershell
 docker build -t crop-disease-render .
-docker volume create crop-disease-data
-docker run --name crop-disease-demo -d -p 10000:10000 --mount source=crop-disease-data,target=/var/data -e APP_URL=http://localhost:10000 -e FORCE_HTTPS=false -e SESSION_SECURE_COOKIE=false crop-disease-render
+python deploy/smoke_test.py --image crop-disease-render
+python deploy/smoke_test.py --image crop-disease-render --memory 512m --cpus 0.1
 ```
 
-Open http://localhost:10000 and http://localhost:10000/healthz. Those three HTTP overrides are for local Docker testing only; keep HTTPS enabled on Render. Internal AI ports need not be published. Then test persistence with `docker restart crop-disease-demo`: the key/database should be reused.
+The script uses Python's standard library, creates randomly named test resources, and cleans up only its own container/volume. It does not target an existing user service.
 
-The preparation machine has no Docker daemon or installed WSL distribution, so an image build cannot be claimed as locally verified here. Laravel regression/health tests and static configuration checks can run locally. The optional Docker smoke workflow provides a Linux build/start/prediction/restart check when run in GitHub Actions; check its actual result before claiming container verification.
+For a manual browser test:
+
+```powershell
+docker run --name crop-disease-demo -d -p 10000:10000 -e APP_URL=http://localhost:10000 -e FORCE_HTTPS=false -e SESSION_SECURE_COOKIE=false -e SESSION_DRIVER=file -e CACHE_STORE=file crop-disease-render
+```
+
+Open http://localhost:10000. Those HTTP overrides are local-test-only; keep HTTPS settings on Render.
 
 ## Troubleshooting
 
-| Problem | Check |
-| --- | --- |
-| Dockerfile or package-lock missing | Commit/push the deployment files and the lockfile; select the feature branch and repository root. |
-| Model files cannot download | Build logs and Hugging Face connectivity; the build must succeed before deployment. |
-| No open port | Nginx logs and PORT; do not override the Docker command. |
-| /healthz is 503 | AI initialization and SQLite startup logs; a reachable `/up` is not enough. |
-| SQLite permissions / missing tables | Disk mount `/var/data`, DATA_DIR/DB_DATABASE alignment and migration logs. |
-| APP_KEY / cookie / 419 CSRF error | Key must be stable, APP_URL must match the HTTPS domain, proxy trust/secure cookies must stay enabled. Refresh stale sessions after switching hosts. |
-| Out of memory / killed Python process | Increase compute RAM. The free 512 MiB plan is not a verified fit. |
-| Data disappears after restart | The free demo has no persistent disk; use the persistent Blueprint for durable data. |
+- Missing Dockerfile/lockfile: check the selected branch, repository root and pushed files.
+- Build/model-download failure: inspect build logs and connectivity; do not ignore a failed warm-up.
+- No listening port: inspect Nginx/startup logs; leave the Docker command unchanged.
+- `/healthz` returns 503: inspect AI initialization and SQLite startup logs; a reachable `/up` is not enough.
+- Wrong redirect or 419 CSRF: APP_URL must be the exact public HTTPS origin, with secure cookies and Render proxy trust. Refresh stale sessions after restarts.
+- Python killed or out of memory: check the free-sized CI assessment and actual Render memory; increase RAM if needed.
+- Data reset: expected on the requested free temporary configuration.
 
-## Render sources checked 17 November 2026
-
-- https://render.com/docs/docker
-- https://render.com/docs/disks
-- https://render.com/docs/free
-- https://render.com/docs/health-checks
-- https://render.com/docs/environment-variables
-- https://render.com/docs/blueprint-spec
+References checked 17 November 2026: https://render.com/docs/docker, https://render.com/docs/free, https://render.com/docs/disks, https://render.com/docs/health-checks, https://render.com/docs/environment-variables and https://render.com/docs/blueprint-spec.

@@ -7,6 +7,7 @@ import argparse
 import http.cookiejar
 import json
 import re
+import socket
 import subprocess
 import time
 import urllib.error
@@ -31,20 +32,22 @@ def wait_ready(url):
     raise RuntimeError('Container did not become ready within 180 seconds')
 
 
-def main(image):
+def main(image, memory, cpus):
     name = 'crop-smoke-' + uuid.uuid4().hex[:12]
     volume = name + '-data'
     created = False
     docker('volume', 'create', volume)
     try:
-        docker('run', '-d', '--name', name, '--memory=2g',
-               '-p', '127.0.0.1::10077', '--mount', f'source={volume},target=/var/data',
+        with socket.socket() as candidate:
+            candidate.bind(('127.0.0.1', 0))
+            port = candidate.getsockname()[1]
+        url = f'http://127.0.0.1:{port}'
+        docker('run', '-d', '--name', name, f'--memory={memory}', f'--cpus={cpus}',
+               '-p', f'127.0.0.1:{port}:10077', '--mount', f'source={volume},target=/var/data',
                '-e', 'PORT=10077', '-e', 'FORCE_HTTPS=false',
-               '-e', 'SESSION_SECURE_COOKIE=false', '-e', 'APP_URL=http://localhost:10077', image)
+               '-e', 'SESSION_SECURE_COOKIE=false', '-e', f'APP_URL={url}',
+               '-e', 'SESSION_DRIVER=file', '-e', 'CACHE_STORE=file', image)
         created = True
-        details = json.loads(docker('inspect', name))[0]
-        port = details['NetworkSettings']['Ports']['10077/tcp'][0]['HostPort']
-        url = 'http://127.0.0.1:' + port
         wait_ready(url)
         print('PASS: custom public PORT, Laravel, SQLite and offline model readiness', flush=True)
 
@@ -66,11 +69,12 @@ def main(image):
         body += (f'--{boundary}\r\nContent-Disposition: form-data; name="image"; filename="leaf.jpg"\r\n'
                  'Content-Type: image/jpeg\r\n\r\n').encode() + photo + f'\r\n--{boundary}--\r\n'.encode()
         request = urllib.request.Request(url + '/detect', data=body,
-                                         headers={'Content-Type': f'multipart/form-data; boundary={boundary}'})
+                                         headers={'Content-Type': f'multipart/form-data; boundary={boundary}', 'Referer': url + '/'})
         with client.open(request, timeout=150) as response:
             html = response.read().decode()
         assert 'Analysis complete' in html and 'MobileNetV2 v1.1' in html, 'Real prediction was not rendered'
         print('PASS: CSRF/session multipart upload through Nginx and Laravel to actual model', flush=True)
+        print('Container memory:', docker('stats', '--no-stream', '--format', '{{.MemUsage}}', name), flush=True)
 
         # Save a test-only marker and key fingerprint, never the key itself.
         probe = ("import sqlite3,hashlib,json; from pathlib import Path; "
@@ -102,4 +106,7 @@ def main(image):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--image', default='crop-disease-render')
-    main(parser.parse_args().image)
+    parser.add_argument('--memory', default='2g')
+    parser.add_argument('--cpus', default='1')
+    args = parser.parse_args()
+    main(args.image, args.memory, args.cpus)

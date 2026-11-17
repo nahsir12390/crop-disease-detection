@@ -1,4 +1,5 @@
-# Durable SQLite; paid compute + disk, no Render Postgres resource.
+# Default: free temporary demo. SQLite and generated key reset on restart/redeploy.
+# The 512 MiB free instance may be too small for PyTorch. Not a verified free-hosting promise.
 services:
   - type: web
     name: crop-disease-detection
@@ -6,22 +7,11 @@ services:
     branch: feature/crop-detection-foundation
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    plan: 1c-2g
+    plan: free
     region: frankfurt
-    numInstances: 1
     healthCheckPath: /healthz
     autoDeployTrigger: "off"
-    disk:
-      name: crop-sqlite
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
-      - key: APP_NAME
-        value: Crop Disease Detection
-      - key: APP_ENV
-        value: production
-      - key: APP_DEBUG
-        value: "false"
       - key: DATA_DIR
         value: /var/data
       - key: DB_DATABASE
@@ -32,3 +22,7 @@ services:
         value: "true"
       - key: TRUSTED_PROXIES
         value: "*"
+      - key: SESSION_DRIVER
+        value: file
+      - key: CACHE_STORE
+        value: file

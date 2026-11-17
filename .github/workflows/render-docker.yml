@@ -8,7 +8,7 @@ on:
       - Dockerfile
       - .dockerignore
       - render.yaml
-      - render.demo.yaml
+      - render.persistent.yaml
       - deploy/**
       - composer.json
       - composer.lock
@@ -38,3 +38,7 @@ jobs:
         run: docker build --progress=plain -t crop-disease-render .
       - name: Verify real upload, readiness, SQLite and restart persistence
         run: python3 deploy/smoke_test.py --image crop-disease-render
+      - name: Assess free-sized instance with 512 MiB and 0.1 CPU
+        id: free-size
+        continue-on-error: true
+        run: python3 deploy/smoke_test.py --image crop-disease-render --memory 512m --cpus 0.1
