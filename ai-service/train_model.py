@@ -14,6 +14,11 @@ from torch.utils.data import DataLoader, Dataset
 
 
 def load_rows(manifest, labels):
+    preparation_status = manifest.parent / 'preparation-status.json'
+    if preparation_status.exists():
+        status = json.loads(preparation_status.read_text())
+        if status.get('status') != 'completed' or status.get('manifest_sha256') != hashlib.sha256(manifest.read_bytes()).hexdigest():
+            raise ValueError('Dataset preparation is incomplete/failed or its manifest changed; rerun preparation')
     with manifest.open(encoding='utf-8-sig', newline='') as stream:
         rows = list(csv.DictReader(stream))
     if not rows:
@@ -85,9 +90,25 @@ def metrics(rows, predictions, labels):
         per_class[label] = dict(support=actual, precision=precision, recall=recall,
                                f1=2 * precision * recall / (precision + recall) if precision + recall else 0)
     correct = sum(matrix[label][label] for label in labels)
+    observed = [value for value in per_class.values() if value['support']]
     return dict(total=len(rows), correct=correct, accuracy=correct / len(rows),
-                macro_f1=sum(v['f1'] for v in per_class.values()) / len(labels),
+                macro_f1=sum(v['f1'] for v in observed) / len(observed),
                 per_class=per_class, confusion_matrix=matrix)
+
+
+def breakdown(rows, predictions, labels):
+    """Keep lab, field and crop results visible instead of hiding gaps in a combined score."""
+    result = {}
+    for kind in ['origin', 'crop']:
+        values = [row.get('origin', 'unspecified') if kind == 'origin' else
+                  next(crop for crop, prefix in main.CROP_PREFIXES.items() if row['label'].startswith(prefix))
+                  for row in rows]
+        result[kind] = {}
+        for value in sorted(set(values)):
+            indices = [index for index, item in enumerate(values) if item == value]
+            result[kind][value] = metrics([rows[index] for index in indices],
+                                         [predictions[index] for index in indices], labels)
+    return result
 
 
 def evaluate(model, loader, rows, device, temperature=1):
@@ -142,7 +163,7 @@ def run():
     if not parameters:
         raise RuntimeError('No trainable classifier parameters found')
     optimizer = torch.optim.AdamW(parameters, lr=args.lr)
-    best, best_score, history = None, -1, []
+    best, best_score, history, best_epoch = None, -1, [], None
     for epoch in range(args.epochs):
         # Frozen backbone stays in eval mode to preserve batch-normalization statistics.
         model.train() if args.unfreeze else model.eval()
@@ -162,6 +183,7 @@ def run():
         print(f'Epoch {epoch + 1}: loss={history[-1]["train_loss"]:.4f}, validation macro F1={score["macro_f1"]:.4f}', flush=True)
         if score['macro_f1'] > best_score:
             best_score = score['macro_f1']
+            best_epoch = epoch + 1
             best = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
     model.load_state_dict(best)
     predictions = evaluate(model, loaders['test'], splits['test'], device)
@@ -171,9 +193,12 @@ def run():
     report = dict(base_model=main.MODEL_ID, revision=main.MODEL_REVISION, seed=20261117,
                   torch_version=torch.__version__,
                   device=str(device), epochs=args.epochs, learning_rate=args.lr, backbone_trainable=args.unfreeze,
+                  selected_epoch=best_epoch,
                   counts={name: dict(Counter(r['label'] for r in items)) for name, items in splits.items()},
                   manifest_sha256=hashlib.sha256(args.manifest.read_bytes()).hexdigest(),
                   baseline=baseline, candidate=candidate, history=history,
+                  baseline_breakdown=breakdown(splits['test'], baseline_predictions, labels),
+                  candidate_breakdown=breakdown(splits['test'], predictions, labels),
                   calibration='Candidate temperature=1 (uncalibrated). Publisher calibration must not be reused.',
                   deployment='Not deployed; requires independent field testing and validation-set calibration.')
     provenance = args.manifest.parent / 'provenance.json'
@@ -181,10 +206,10 @@ def run():
         report['data_provenance'] = json.loads(provenance.read_text())
     (args.output / 'report.json').write_text(json.dumps(report, indent=2))
     with (args.output / 'predictions.csv').open('w', newline='', encoding='utf-8') as stream:
-        writer = csv.DictWriter(stream, fieldnames=['path', 'source', 'expected_label', 'baseline_label', 'candidate_label', 'candidate_confidence'])
+        writer = csv.DictWriter(stream, fieldnames=['path', 'source', 'origin', 'expected_label', 'baseline_label', 'candidate_label', 'candidate_confidence'])
         writer.writeheader()
         for row, old, new in zip(splits['test'], baseline_predictions, predictions):
-            writer.writerow(dict(path=row['path'], source=row['source'], expected_label=row['label'],
+            writer.writerow(dict(path=row['path'], source=row['source'], origin=row.get('origin', 'unspecified'), expected_label=row['label'],
                                  baseline_label=old['predicted_label'], candidate_label=new['predicted_label'], candidate_confidence=new['confidence']))
     (args.output / 'status.json').write_text(json.dumps({'status': 'completed'}))
     print(f'Completed: baseline {baseline["correct"]}/{baseline["total"]}; candidate {candidate["correct"]}/{candidate["total"]}. Not deployed.', flush=True)

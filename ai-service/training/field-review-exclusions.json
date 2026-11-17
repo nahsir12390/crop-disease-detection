@@ -1,0 +1,17 @@
+{
+  "method": "Manual contact-sheet content review before the final completed experiment. No disease labels reassigned. An earlier incomplete attempt was aborted for an additional collage exclusion. Not expert disease verification.",
+  "excluded_sources": {
+    "https://raw.githubusercontent.com/pratikkayal/PlantDoc-Dataset/5467f6012d78d1c446145d5f582da6096f852ae8/train/Tomato%20leaf/tomato-leaf-6291945.jpg": "Composite/illustration-like whole-plant reference rather than a clear leaf photograph",
+    "https://raw.githubusercontent.com/pratikkayal/PlantDoc-Dataset/5467f6012d78d1c446145d5f582da6096f852ae8/train/Tomato%20Septoria%20leaf%20spot/tomato-diseases-1-638.jpg": "Disease infographic with multiple panels and labels",
+    "https://raw.githubusercontent.com/pratikkayal/PlantDoc-Dataset/5467f6012d78d1c446145d5f582da6096f852ae8/train/Tomato%20Septoria%20leaf%20spot/20100824septoria.jpg": "Multiple-image comparison rather than one leaf photo",
+    "https://raw.githubusercontent.com/pratikkayal/PlantDoc-Dataset/5467f6012d78d1c446145d5f582da6096f852ae8/train/Tomato%20leaf%20bacterial%20spot/bac-canker.jpg": "Multiple-image comparison rather than one leaf photo",
+    "https://raw.githubusercontent.com/pratikkayal/PlantDoc-Dataset/5467f6012d78d1c446145d5f582da6096f852ae8/test/Tomato%20leaf%20bacterial%20spot/Tom_Bact3.jpg": "Fruit symptoms dominate; unsuitable leaf-classification example",
+    "https://raw.githubusercontent.com/pratikkayal/PlantDoc-Dataset/5467f6012d78d1c446145d5f582da6096f852ae8/test/Tomato%20leaf%20mosaic%20virus/page_2.jpg": "Disease infographic containing several panels and fruit",
+    "https://raw.githubusercontent.com/pratikkayal/PlantDoc-Dataset/5467f6012d78d1c446145d5f582da6096f852ae8/train/Tomato%20mold%20leaf/tylc.jpg": "Multiple-image collage rather than one leaf photo",
+    "https://raw.githubusercontent.com/pratikkayal/PlantDoc-Dataset/5467f6012d78d1c446145d5f582da6096f852ae8/train/Tomato%20leaf%20bacterial%20spot/bac-spot.jpg": "Additional multi-panel collage identified during replacement review"
+  },
+  "excluded_folders": {
+    "train/Bell_pepper leaf": "Mixed crop identities including apparent black-pepper spikes/leaves. Entire healthy-bell-pepper folder excluded pending expert crop verification.",
+    "test/Bell_pepper leaf": "Same mixed-crop concern; use PlantVillage replay for healthy bell pepper only."
+  }
+}

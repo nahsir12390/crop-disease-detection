@@ -55,6 +55,10 @@ def run():
                   limitation='Previously observed 40-image regression benchmark, not a new blind or independent test. Publisher training overlap cannot be completely ruled out.',
                   confidence='Candidate scores are uncalibrated. This comparison measures top-1 class accuracy, not diagnostic certainty.',
                   deployed=False)
+    training_report = args.checkpoint.parent / 'report.json'
+    if training_report.exists():
+        result['candidate_training_provenance'] = json.loads(training_report.read_text()).get('data_provenance')
+        result['candidate_domain_warning'] = 'If the candidate trained on other university images, this benchmark is now within its adaptation source, not an independent dataset test.'
     args.output.mkdir(parents=True)
     (args.output / 'report.json').write_text(json.dumps(result, indent=2))
     with (args.output / 'predictions.csv').open('w', newline='', encoding='utf-8') as stream:

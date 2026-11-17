@@ -4,6 +4,8 @@ The training scripts extend the existing AI service. They do not change Laravel,
 
 The first real run is complete. See [its results and limitations](model-training-results.md): the pipeline works, but field accuracy did not improve, so its candidate was not deployed.
 
+The next experiment uses a [reviewed mixture of field/web photographs and replay images](field-training.md), with source-specific reporting and the original benchmark excluded from training.
+
 ## First: a small all-crop pilot
 
 ```powershell
