@@ -30,7 +30,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=composer_binary /usr/bin/composer /usr/local/bin/composer
 WORKDIR /app
 COPY ai-service/requirements.txt /app/ai-service/requirements.txt
-RUN python -m pip install --no-cache-dir torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu \
+RUN python -m pip install --no-cache-dir pip==25.3 \
+    && python -m pip install --no-cache-dir --retries 5 --resume-retries 5 --timeout 60 torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu \
     && python -m pip install --no-cache-dir -r ai-service/requirements.txt \
     && python -m pip check
 COPY composer.json composer.lock ./
