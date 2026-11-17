@@ -18,6 +18,8 @@ Replace both example values with the owner's chosen real email and unique passwo
 
 Deploy the feature branch. Startup runs additive migrations and `php artisan app:bootstrap-admin`. This creates or updates the configured administrator, makes it active, and hashes its password. It never prints the password. **Server configuration controls this account: each container startup reapplies its configured name and password.** Use the configured email/password at `/login`, then open **Admin** in the navigation. No shell or publicly accessible admin-creation route is needed.
 
+Password provisioning also revokes older sessions for that account, so someone holding an earlier session cannot inherit newly granted administrator privileges. Administrator sessions need a fresh login after startup reapplies the configured password.
+
 The accepted temporary SQLite setup still applies: replacing/spinning down the free container can reset ordinary accounts and contact messages. The configured administrator is recreated on startup. Persistent storage is needed if durable account/message retention becomes a requirement. Existing environment variables for SQLite and AI remain valid.
 
 ## Local setup

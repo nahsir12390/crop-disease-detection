@@ -17,7 +17,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AccountController::class, 'login'])->middleware('throttle:6,1');
     Route::post('/register', [AccountController::class, 'register'])->middleware('throttle:5,1');
 });
-Route::middleware(['auth', 'active'])->group(function () {
+Route::middleware(['auth', 'auth.session', 'active'])->group(function () {
     Route::get('/portal', [DetectionController::class, 'index'])->name('detect');
     Route::post('/detect', [DetectionController::class, 'analyze'])->name('detect.analyze');
     Route::get('/detect/health', [DetectionController::class, 'health'])->name('detect.health');

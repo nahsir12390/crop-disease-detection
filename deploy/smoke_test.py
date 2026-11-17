@@ -55,6 +55,7 @@ def main(image, memory, cpus):
         client = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
         with client.open(url + '/register', timeout=15) as response:
             html = response.read().decode()
+        assert f'action="{url}/register"' in html, 'Registration form does not use the public origin'
         token = re.search(r'name="_token" value="([^"]+)"', html).group(1)
         password = uuid.uuid4().hex
         registration = urllib.parse.urlencode({'_token': token, 'name': 'Container test',
@@ -64,6 +65,7 @@ def main(image, memory, cpus):
                                                headers={'Referer': url + '/register'}), timeout=30) as response:
             html = response.read().decode()
         assert 'analysis-form' in html and 'Logout' in html, 'Registered user could not access portal'
+        assert f'action="{url}/detect"' in html, 'Prediction form does not use the public origin'
         token = re.search(r'name="_token" value="([^"]+)"', html).group(1)
         print('PASS: real account registration and authenticated portal', flush=True)
         # Public real PlantVillage photo, pinned to an immutable dataset commit.

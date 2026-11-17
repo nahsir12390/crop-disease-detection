@@ -41,4 +41,12 @@ class DeploymentHealthTest extends TestCase
         (new AppServiceProvider($this->app))->boot();
         $this->get('/')->assertOk()->assertSee('https://localhost/register', false);
     }
+
+    public function test_production_links_use_public_url_instead_of_internal_request_port(): void
+    {
+        $this->app->detectEnvironment(fn () => 'production');
+        config(['app.url' => 'https://crop.example.test', 'app.force_https' => true]);
+        (new AppServiceProvider($this->app))->boot();
+        $this->get('/login')->assertOk()->assertSee('https://crop.example.test/login', false);
+    }
 }

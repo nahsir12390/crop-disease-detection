@@ -21,6 +21,7 @@ class AccountController extends Controller
         $user = User::create($data);
         Auth::login($user);
         $request->session()->regenerate();
+        $request->session()->put('password_hash_web', $user->getAuthPassword());
 
         return redirect()->intended(route('detect'));
     }
@@ -33,6 +34,7 @@ class AccountController extends Controller
             throw ValidationException::withMessages(['email' => 'The email or password is incorrect.']);
         }
         $request->session()->regenerate();
+        $request->session()->put('password_hash_web', Auth::user()->getAuthPassword());
 
         return redirect()->intended(route('detect'));
     }

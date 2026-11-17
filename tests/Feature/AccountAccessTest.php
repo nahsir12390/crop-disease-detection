@@ -114,4 +114,14 @@ class AccountAccessTest extends TestCase
         config(['admin.password' => 'short']);
         $this->artisan('app:bootstrap-admin')->assertFailed();
     }
+
+    public function test_admin_password_provisioning_revokes_previous_account_sessions(): void
+    {
+        $user = User::factory()->create();
+        $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertRedirect('/portal');
+        config(['admin.email' => $user->email, 'admin.password' => 'new-owner-secret-password']);
+        $this->artisan('app:bootstrap-admin')->assertSuccessful();
+        $this->actingAs($user->fresh())->get('/admin')->assertRedirect('/login');
+        $this->assertGuest();
+    }
 }
