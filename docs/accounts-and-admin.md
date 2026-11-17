@@ -43,3 +43,9 @@ Use that account's real email. The command fails if the account does not exist o
 The contact form saves validated messages in SQLite for the administrator; it does not send email. Message text is escaped in the inbox. The site does not advertise invented contact addresses or promise emailed replies. There is no password-reset or email-verification delivery integration in this change; those would require a configured mail service and separate workflows.
 
 The inference model, its preprocessing and its weights are unchanged. Registration does not train the model or save a diagnosis history. Public `/healthz` and `/up` remain available for deployment probes.
+
+## Verification
+
+27 Laravel tests passed (143 assertions), covering access control, registration, login, logout, rate limiting, administrator privileges, account suspension, escaped/private inbox messages, server provisioning and stale-session revocation. Production assets built and Blade views compiled successfully. Isolated Chrome checks exercised real forms/cookies, contact submission, admin controls and five mobile page layouts without page errors.
+
+[Linux Docker verification](https://github.com/nahsir12390/crop-disease-detection/actions/runs/44147700690) passed for commit `71745f6`, including real registration, authenticated image submission through Laravel to MobileNetV2, and SQLite/key preservation using a test volume. Both the standard check and the separate 512 MiB/0.1 CPU check passed. The test volume does not imply persistence on the free Render configuration. This is container verification; deploy the updated branch and check the public HTTPS site separately.
