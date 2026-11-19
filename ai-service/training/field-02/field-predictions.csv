@@ -1,0 +1,41 @@
+sample_id,source_filename,expected_label,baseline_label,candidate_label,candidate_confidence
+NoFoliarSymptoms-01,2012_03_DSC1748_maize_diverse-C-AC-DK-273.JPG,Corn_(maize)___healthy,Corn_(maize)___Common_rust_,Corn_(maize)___healthy,0.1278628706932068
+NoFoliarSymptoms-02,2012_03_IMG_6334_maize_diverse JM-C-Ac.JPG,Corn_(maize)___healthy,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,0.30331435799598694
+NoFoliarSymptoms-03,IMG_20190316_090101.jpg,Corn_(maize)___healthy,Corn_(maize)___healthy,Corn_(maize)___healthy,0.6125612258911133
+NoFoliarSymptoms-04,20190313_152759.jpg,Corn_(maize)___healthy,Corn_(maize)___Common_rust_,Corn_(maize)___healthy,0.15127204358577728
+NoFoliarSymptoms-05,2019-03-13--Cedara-(DKB)-DSC_0155.JPG,Corn_(maize)___healthy,Corn_(maize)___Common_rust_,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,0.14884436130523682
+NoFoliarSymptoms-06,20190313_120352.jpg,Corn_(maize)___healthy,Corn_(maize)___healthy,Corn_(maize)___healthy,0.07745303213596344
+NoFoliarSymptoms-07,20200309_103344.jpg,Corn_(maize)___healthy,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.1705102175474167
+NoFoliarSymptoms-08,20190313_112344.jpg,Corn_(maize)___healthy,Corn_(maize)___Common_rust_,Corn_(maize)___healthy,0.06297620385885239
+NoFoliarSymptoms-09,2019-03-13--Cedara-(DKB)-DSC_0080.JPG,Corn_(maize)___healthy,Corn_(maize)___healthy,Corn_(maize)___healthy,0.2782840132713318
+NoFoliarSymptoms-10,20200309_092920.jpg,Corn_(maize)___healthy,Corn_(maize)___healthy,Corn_(maize)___healthy,0.005928722210228443
+CR-01,IMG_20190316_090913.jpg,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,Corn_(maize)___Northern_Leaf_Blight,0.6258805394172668
+CR-02,IMG_20190316_081413_BURST002.jpg,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.31619346141815186
+CR-03,2019-03-13--Cedara-(DKB)-DSC_0205.JPG,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.4155066907405853
+CR-04,IMG_20190316_093644.jpg,Corn_(maize)___Common_rust_,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,0.03053152747452259
+CR-05,IMG_20190316_085756.jpg,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.05547364056110382
+CR-06,IMG_20190316_091823.jpg,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.4145953357219696
+CR-07,IMG_20190316_084324.jpg,Corn_(maize)___Common_rust_,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,0.03989700600504875
+CR-08,IMG_20190316_094248_1.jpg,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.45245152711868286
+CR-09,20190313_145528.jpg,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.5284914970397949
+CR-10,IMG_3839.JPG,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.21408599615097046
+NCLB-01,IMG_20190227_103909.jpg,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,0.1075226292014122
+NCLB-02,IMG_3687.JPG,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.16742061078548431
+NCLB-03,20190313_145442.jpg,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,0.44257718324661255
+NCLB-04,IMG_3702.JPG,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.041512392461299896
+NCLB-05,20200309_101836.jpg,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,0.0920153334736824
+NCLB-06,IMG_3802.JPG,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,0.06285247951745987
+NCLB-07,IMG_20190227_113355.jpg,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,0.4400333762168884
+NCLB-08,IMG_20190316_090649.jpg,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,0.06972822546958923
+NCLB-09,IMG_3720.JPG,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.05298652499914169
+NCLB-10,20200309_091242.jpg,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,0.261701375246048
+GLS-01,179_CIMG3915_1-141-1.JPG,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Common_rust_,Corn_(maize)___healthy,0.02488621324300766
+GLS-02,IMG_20200302_111743.jpg,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Northern_Leaf_Blight,Corn_(maize)___Northern_Leaf_Blight,0.02093713916838169
+GLS-03,70_CIMG3805_1-259-1.JPG,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.04096303880214691
+GLS-04,169_CIMG3905_1-284-2.JPG,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Common_rust_,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,0.3428821563720703
+GLS-05,192_CIMG3928_1-116-2.JPG,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.0804179310798645
+GLS-06,20200309_090732.jpg,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___healthy,Corn_(maize)___healthy,0.25866296887397766
+GLS-07,142_CIMG3878_1-125-1.JPG,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.11001121252775192
+GLS-08,227_CIMG3964_1-333-1.JPG,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.1251991093158722
+GLS-09,117_CIMG3853_1-121-2.JPG,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Common_rust_,Corn_(maize)___healthy,0.05303354561328888
+GLS-10,105_CIMG3841_1-140-2.JPG,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,0.08888839185237885

@@ -1,0 +1,10 @@
+{
+  "dataset": "spMohanty/PlantVillage-Dataset",
+  "revision": "7f7ecc7e1eaca78107e3affe7cb5abd9427e139a",
+  "seed": 20261117,
+  "purpose": "Training pipeline pilot only; pretrained model used PlantVillage. Not independent evaluation.",
+  "group_limit": "Source leaf-map groups where available; unknown groups use source identifier. Unknown plant/session identities and near duplicates remain limitations.",
+  "unknown_group_images": 145,
+  "source": "https://github.com/spMohanty/PlantVillage-Dataset",
+  "images": 288
+}

@@ -1,0 +1,588 @@
+{
+  "method": "Case-insensitive basename checks against pinned cached publisher/source manifests",
+  "plantdoc_commit": "5467f6012d78d1c446145d5f582da6096f852ae8",
+  "plantdoc_tree_sha256": "ac1994b80232dad6c5ee9c32545bb89fa5bb323b1573e0304cb708ba6b5cb2c6",
+  "plantvillage": {
+    "3a2cce39a518f6ae887fbbe01b6db35ad1209bf0": {
+      "splits_sha256": "104187f77d231bdbf7f05ebda45e775df8fee6249b353333e3bd151730a9b996",
+      "sizes": {
+        "train": 43445,
+        "validation": 5430,
+        "test": 5430
+      }
+    },
+    "77e6d262dca53b818f7ad1d67088700754515639": {
+      "splits_sha256": "d46d23314dc7e345c8817457cfaf10a48cf7cbc0740305e0b55883e0f6c9029e",
+      "sizes": {
+        "train": 43445,
+        "validation": 5430,
+        "test": 5430
+      }
+    }
+  },
+  "checked_university_images": 80,
+  "matches": [],
+  "checks": [
+    {
+      "filename": "20200309_093554.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "2019-03-13--Cedara-(DKB)-DSC_0031.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_090412.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_3846.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "2012_03_DSC1763_maize_diverse-C-AC-DK-273.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20200309_093639.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20200309_092618.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_121710.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_121237.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_3678.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20200309_103456.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20200309_093520.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_143545.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_122039.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_120744.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_153651.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20200309_093817.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_121021.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20200309_092404.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_3751.JPG",
+      "split": "test",
+      "label": "Corn_(maize)___healthy",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_113444.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_091324.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_084913.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_080002.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_084409.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20200309_092059.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_080643.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "2019-03-13--Cedara-(DKB)-DSC_0309.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_091429.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_121901.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_084648.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "2019-03-13--Cedara-(DKB)-DSC_0308.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_093851.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_085240.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_085559.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_091922.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_094336.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_090754.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_092215.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_074913.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___Common_rust_",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_3832.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_143914.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_084625.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_084528.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_3652.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_3691.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_3718.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20200302_112009.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20200129_103646.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_084956.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_144433.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_085030.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_094112.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "2019-03-13--Cedara-(DKB)-DSC_0108.JPG",
+      "split": "validation",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_141853.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20200309_102702.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_092523.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_142616.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_113105.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_20190316_074046.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___Northern_Leaf_Blight",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_142755.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_115210.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_3838.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "186_CIMG3922_1-194-1.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "102_CIMG3837_1-49-2.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "101_CIMG3836_1-49-1.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20200309_093016.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20200309_090613.jpg",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "121_CIMG3857_1-19-1.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "31_CIMG3766_1-207-2.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "126_CIMG3862_1-164-2.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_3814.JPG",
+      "split": "train",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "139_CIMG3875_1-187-2.JPG",
+      "split": "validation",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20200309_092848.jpg",
+      "split": "validation",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "25_CIMG3760_1-42-2.JPG",
+      "split": "validation",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "IMG_3837.JPG",
+      "split": "validation",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "10_CIMG3744_1-40-1.JPG",
+      "split": "test",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_115634.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "19_CIMG3753_1-383-1.JPG",
+      "split": "test",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    },
+    {
+      "filename": "20190313_142410.jpg",
+      "split": "test",
+      "label": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "plantdoc_filename_match": false,
+      "plantvillage_matches": []
+    }
+  ],
+  "limitation": "This is not a pixel/perceptual audit of every publisher training image. Renamed/recompressed copies and undisclosed sources cannot be excluded. PlantDoc and replay overlap is declared regardless of these filename checks."
+}

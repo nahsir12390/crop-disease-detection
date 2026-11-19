@@ -1,0 +1,12 @@
+@extends('layouts.site')
+@section('title', ($register ? 'Create account' : 'Login').' | Crop Disease Detection')
+@section('content')
+<section class="mx-auto max-w-md rounded-3xl border border-stone-200 bg-white p-7 shadow-sm sm:p-9"><p class="text-xs font-bold uppercase tracking-widest text-emerald-700">Your crop analysis portal</p><h1 class="mt-4 text-3xl font-semibold text-emerald-950">{{ $register ? 'Create your account' : 'Welcome back' }}</h1><p class="mt-3 text-sm leading-6 text-slate-500">{{ $register ? 'Register to start analyzing leaf photographs.' : 'Sign in to continue to leaf analysis.' }}</p>
+<form method="POST" action="{{ route($register ? 'register' : 'login') }}" class="mt-7 space-y-5">@csrf
+@if($register)<div><label for="name" class="mb-2 block text-sm font-semibold">Full name</label><input id="name" name="name" required maxlength="100" autocomplete="name" value="{{ old('name') }}" class="w-full rounded-xl border border-stone-300 p-3 focus:ring-2 focus:ring-emerald-600"></div>@endif
+<div><label for="email" class="mb-2 block text-sm font-semibold">Email address</label><input id="email" name="email" type="email" required maxlength="254" autocomplete="email" value="{{ old('email') }}" class="w-full rounded-xl border border-stone-300 p-3 focus:ring-2 focus:ring-emerald-600"></div>
+<div><label for="password" class="mb-2 block text-sm font-semibold">Password</label><input id="password" name="password" type="password" required maxlength="128" @if($register) minlength="8" @endif autocomplete="{{ $register ? 'new-password' : 'current-password' }}" class="w-full rounded-xl border border-stone-300 p-3 focus:ring-2 focus:ring-emerald-600">@if($register)<p class="mt-2 text-xs text-slate-500">Use at least eight characters.</p>@endif</div>
+@if($register)<div><label for="password_confirmation" class="mb-2 block text-sm font-semibold">Confirm password</label><input id="password_confirmation" name="password_confirmation" type="password" required autocomplete="new-password" class="w-full rounded-xl border border-stone-300 p-3 focus:ring-2 focus:ring-emerald-600"></div>@endif
+<button class="w-full rounded-xl bg-emerald-900 py-3 font-semibold text-white hover:bg-emerald-800">{{ $register ? 'Create account' : 'Login' }}</button></form>
+<p class="mt-6 text-center text-sm text-slate-600">{{ $register ? 'Already have an account?' : 'New here?' }} <a href="{{ route($register ? 'login' : 'register') }}" class="font-semibold text-emerald-800 underline">{{ $register ? 'Login' : 'Create account' }}</a></p></section>
+@endsection
