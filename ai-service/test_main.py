@@ -12,6 +12,16 @@ import main
 
 
 class ImageValidationTests(unittest.TestCase):
+    def test_catalogue_has_disjoint_classes_and_marks_single_class_crops(self):
+        classes = [label for spec in main.CROPS.values() for label in spec['classes']]
+        self.assertEqual(len(main.CROPS), 14)
+        self.assertEqual(len(classes), 38)
+        self.assertEqual(len(set(classes)), 38)
+        for spec in main.CROPS.values():
+            self.assertTrue(all(label.startswith(spec['prefix']) for label in spec['classes']))
+            if len(spec['classes']) == 1:
+                self.assertNotEqual(spec['coverage'], 'healthy_and_diseases')
+
     def test_matching_publisher_calibration_is_required(self):
         calibration = {'temperature': .8845188130635788}
         threshold = {'status': 'selected', 'threshold': .5, 'temperature': .8845188130635788}
@@ -59,7 +69,7 @@ class ImageValidationTests(unittest.TestCase):
         self.assertEqual(result['confidence'], .75)
 
     def test_unsupported_crops_rejected_before_inference(self):
-        for crop in ['cassava', 'potato', '', None]:
+        for crop in ['cassava', 'rice', '', None]:
             with self.subTest(crop=crop), self.assertRaises(HTTPException) as error:
                 main.classify(self.image(), crop)
             self.assertEqual(error.exception.status_code, 422)

@@ -50,7 +50,7 @@ def run():
     pools = {}
     for item in tree:
         label = item['path']
-        if any(label.startswith(prefix) for prefix in main.CROP_PREFIXES.values()):
+        if any(label.startswith(main.CROP_PREFIXES[crop]) for crop in ['tomato', 'maize', 'pepper']):
             pools[label] = [f'raw/color/{label}/{entry["path"]}' for entry in tree_at(item['sha'])
                             if entry['type'] == 'blob' and entry['path'].lower().endswith(('.jpg', '.jpeg', '.png'))]
     if len(pools) != 16:

@@ -28,12 +28,12 @@
                     <label for="crop" class="block text-sm font-semibold text-emerald-950">1. Choose your crop</label>
                     <select id="crop" name="crop" required aria-describedby="crop-help" class="mt-2 w-full rounded-xl border border-stone-300 bg-white p-3 text-slate-900 focus:ring-2 focus:ring-emerald-600">
                         <option value="">Select a crop</option>
-                        <option value="tomato" @selected(old('crop') === 'tomato')>Tomato</option>
-                        <option value="maize" @selected(old('crop') === 'maize')>Maize</option>
-                        <option value="cassava" @selected(old('crop') === 'cassava')>Cassava (not yet supported)</option>
-                        <option value="pepper" @selected(old('crop') === 'pepper')>Pepper (bell pepper)</option>
+                        @foreach(config('crops') as $key => $crop)
+                            <option value="{{ $key }}" @selected(old('crop') === $key)>{{ $crop['label'] }}{{ $crop['coverage'] !== 'healthy_and_diseases' ? ' â€” limited coverage' : '' }}</option>
+                        @endforeach
                     </select>
                     <p id="crop-help" aria-live="polite" class="mb-5 mt-2 text-sm text-slate-500">Choose a supported crop before uploading. Pepper supports bell pepper only.</p>
+                    <details class="mb-5 rounded-xl border border-stone-200 p-3 text-sm"><summary class="cursor-pointer font-semibold text-emerald-900">Model classes for your selected crop</summary><ul id="crop-classes" class="mt-3 list-inside list-disc space-y-1 text-slate-600"><li>Choose a crop to see its classes.</li></ul></details>
                     <p class="mb-2 text-sm font-semibold text-emerald-950">2. Upload a leaf image</p>
                     <label id="dropzone" for="image" class="relative flex min-h-64 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-emerald-200 bg-emerald-50/40 p-6 text-center transition hover:border-emerald-600 focus-within:ring-2 focus-within:ring-emerald-600">
                         <svg class="mb-4 h-10 w-10 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></svg>
@@ -59,7 +59,9 @@
                             <div class="flex items-end justify-between gap-3"><span class="text-sm text-slate-500">{{ $result['uncertain'] ? 'Highest score for your crop' : 'Model confidence' }}</span><strong class="text-3xl text-emerald-900">{{ $result['confidence'] > 0 && $result['confidence'] < 0.0001 ? '<0.01' : number_format($result['confidence'] * 100, 2) }}<span class="text-lg">%</span></strong></div>
                             @if($result['uncertain'])
                                 <div class="mt-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-900">
-                                    @if(($result['uncertainty_reason'] ?? null) === 'crop_conflict')
+                                    @if($result['limited_coverage'] ?? false)
+                                        <p class="font-semibold">Limited model coverage</p><p class="mt-2">{{ $result['coverage_note'] }}</p>
+                                    @elseif(($result['uncertainty_reason'] ?? null) === 'crop_conflict')
                                         <p>The model's strongest match is outside your selected crop. This does not mean you chose the wrong crop: the model can misclassify field photos.</p>
                                     @else
                                         <p>The model could not confidently identify a condition for this crop.</p>
@@ -80,12 +82,12 @@
                         </div>
                     </section>
                 @else
-                    <section class="rounded-3xl bg-emerald-950 p-7 text-white"><p class="text-xs font-semibold uppercase tracking-widest text-emerald-300">From image to insight</p><h2 class="mt-3 text-2xl font-semibold">Your results appear here.</h2><p class="mt-3 text-sm leading-7 text-emerald-100">See possible leaf conditions and confidence scores for your selected crop. Up to three supported matches appear after analysis.</p><div class="mt-6 flex gap-6 border-t border-white/15 pt-5"><p><strong class="text-2xl">16</strong><span class="block text-xs text-emerald-200">Supported classes</span></p><p><strong class="text-2xl">3</strong><span class="block text-xs text-emerald-200">Supported crops</span></p></div></section>
+                    <section class="rounded-3xl bg-emerald-950 p-7 text-white"><p class="text-xs font-semibold uppercase tracking-widest text-emerald-300">From image to insight</p><h2 class="mt-3 text-2xl font-semibold">Your results appear here.</h2><p class="mt-3 text-sm leading-7 text-emerald-100">See possible leaf conditions and confidence scores for your selected crop. Up to three supported matches appear after analysis.</p><div class="mt-6 flex gap-6 border-t border-white/15 pt-5"><p><strong class="text-2xl">38</strong><span class="block text-xs text-emerald-200">Supported classes</span></p><p><strong class="text-2xl">14</strong><span class="block text-xs text-emerald-200">Supported crops</span></p></div></section>
                 @endif
                 <section id="guidance" class="rounded-3xl border border-stone-200 bg-white p-6">
                     <h2 class="font-semibold text-emerald-950">Give your photo the best chance</h2>
                     <ul class="mt-4 space-y-3 text-sm leading-6 text-slate-600"><li>Use natural light and keep the leaf in focus.</li><li>Center one leaf against a simple background.</li><li>Show the affected area without covering the leaf.</li></ul>
-                    <p class="mt-5 border-t border-stone-100 pt-4 text-xs leading-6 text-slate-500">Choose Tomato, Maize or bell Pepper. Cassava is not supported by this model. The model cannot reliably identify unsupported plants or non-leaf images.</p>
+                    <p class="mt-5 border-t border-stone-100 pt-4 text-xs leading-6 text-slate-500">Choose from 14 crops and review the listed classes before analysis. Some crops have limited coverage. Cassava, rice and other unlisted crops are not supported. The model can misclassify unsupported plants or non-leaf images.</p>
                 </section>
             </aside>
         </div>
@@ -93,6 +95,7 @@
     </main>
     <footer class="border-t border-stone-200 px-5 py-6 text-center text-xs text-slate-500">Crop Disease Detection Using Deep Learning Technique · Powered by MobileNetV2</footer>
     <script>
+        const cropCatalogue = @json(config('crops'));
         const form = document.getElementById('analysis-form');
         const input = document.getElementById('image');
         const crop = document.getElementById('crop');
@@ -121,13 +124,18 @@
             preview.classList.remove('hidden');
         }
         function updateCrop() {
-            const supported = ['tomato', 'maize', 'pepper'].includes(crop.value);
+            const selected = cropCatalogue[crop.value];
+            const supported = Boolean(selected);
             input.disabled = !supported || submitting;
             button.disabled = !supported || submitting;
-            document.getElementById('crop-help').textContent = crop.value === 'cassava'
-                ? 'Cassava analysis is unavailable: this model has no Cassava classes. Choose another crop to upload.'
-                : supported ? 'Predictions will be restricted to this crop. Pepper supports bell pepper only.'
-                : 'Choose a supported crop before uploading. Pepper supports bell pepper only.';
+            document.getElementById('crop-help').textContent = selected ? selected.note : 'Choose a crop to review its available classes before uploading.';
+            const list = document.getElementById('crop-classes');
+            list.replaceChildren();
+            (selected ? selected.classes : ['Choose a crop to see its classes.']).forEach(label => {
+                const item = document.createElement('li');
+                item.textContent = label.includes('___') ? label.split('___')[1].replaceAll('_', ' ') : label;
+                list.appendChild(item);
+            });
             dropzone.classList.toggle('opacity-50', !supported);
         }
         crop.addEventListener('change', () => {
@@ -156,7 +164,7 @@
         form.addEventListener('submit', async e => {
             e.preventDefault();
             if (submitting || !form.reportValidity()) return;
-            if (!['tomato', 'maize', 'pepper'].includes(crop.value)) { updateCrop(); return; }
+            if (!Object.hasOwn(cropCatalogue, crop.value)) { updateCrop(); return; }
             submitting = true; button.disabled = true; input.disabled = true; crop.disabled = true;
             error.classList.add('hidden'); form.setAttribute('aria-busy', 'true');
             document.getElementById('spinner').classList.remove('hidden');

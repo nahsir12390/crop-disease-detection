@@ -19,14 +19,15 @@ os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
 logger = logging.getLogger("uvicorn.error")
 MAX_BYTES = 5 * 1024 * 1024
 MAX_PIXELS = 20_000_000
-CROP_PREFIXES = {"tomato": "Tomato___", "maize": "Corn_(maize)___", "pepper": "Pepper,_bell___"}
+CROPS = json.loads((BASE_DIR / 'crops.json').read_text(encoding='utf-8'))
+CROP_PREFIXES = {key: value['prefix'] for key, value in CROPS.items()}
 
 
 def validate_crop(crop):
     if crop == "cassava":
-        raise HTTPException(422, "Cassava is not supported by the current model. Choose Tomato, Maize or Pepper.")
+        raise HTTPException(422, "Cassava is not supported by the current model. Choose a crop listed in the portal.")
     if crop not in CROP_PREFIXES:
-        raise HTTPException(422, "Choose Tomato, Maize or Pepper for analysis")
+        raise HTTPException(422, "Choose a supported crop listed in the portal")
 
 MODEL_ID = "neghani/plantvillage-mobilenetv2"
 # Field-fine-tuned v1.1 snapshot, with its matching processor and calibration.
@@ -64,6 +65,11 @@ def get_classifier():
             labels = model.config.id2label
             if len(labels) != 38 or any("___" not in label for label in labels.values()):
                 raise RuntimeError("Model does not contain the expected PlantVillage labels")
+            configured = [label for crop in CROPS.values() for label in crop['classes']]
+            if len(configured) != len(set(configured)) or set(configured) != set(labels.values()):
+                raise RuntimeError('Crop catalogue does not exactly match the loaded model classes')
+            if any(not label.startswith(crop['prefix']) for crop in CROPS.values() for label in crop['classes']):
+                raise RuntimeError('Crop catalogue contains an invalid class prefix')
             calibration_path = hf_hub_download(MODEL_ID, "calibration.json", revision=MODEL_REVISION)
             threshold_path = hf_hub_download(MODEL_ID, "threshold.json", revision=MODEL_REVISION)
             temperature, threshold = calibration_settings(
@@ -124,6 +130,7 @@ def health():
         "model": MODEL_ID,
         "revision": MODEL_REVISION,
         "model_version": MODEL_VERSION,
+        "supported_crops": {key: spec['label'] for key, spec in CROPS.items()},
         "temperature": _temperature if _model is not None else None,
         "confidence_threshold": _confidence_threshold if _model is not None else None,
         "error": "Model initialization failed; inspect the AI service logs and restart after fixing the cause." if _model_error else None,
@@ -174,9 +181,11 @@ def classify(content, crop):
             crop_conflict = int(scores.argmax()) not in allowed
             crop_confidence = float(scores[allowed].sum())
         predictions = [readable_prediction(_model.config.id2label[int(i)], float(v)) for v, i in zip(values, indices)]
-        uncertain = predictions[0]["confidence"] < _confidence_threshold
+        limited = CROPS[crop]['coverage'] != 'healthy_and_diseases'
+        uncertain = limited or predictions[0]["confidence"] < _confidence_threshold
         return {**predictions[0], "uncertain": uncertain,
-                "uncertainty_reason": ("crop_conflict" if crop_conflict else "low_confidence") if uncertain else None,
+                "limited_coverage": limited, "coverage_note": CROPS[crop]['note'],
+                "uncertainty_reason": ("limited_coverage" if limited else "crop_conflict" if crop_conflict else "low_confidence") if uncertain else None,
                 "selected_crop_confidence": crop_confidence,
                 "top_predictions": predictions, "selected_crop": crop,
                 "model": MODEL_ID, "revision": MODEL_REVISION, "model_version": MODEL_VERSION,

@@ -15,6 +15,7 @@ on:
       - package.json
       - package-lock.json
       - ai-service/main.py
+      - ai-service/crops.json
       - ai-service/requirements.txt
       - bootstrap/app.php
       - config/**

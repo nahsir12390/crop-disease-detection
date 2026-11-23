@@ -1,0 +1,152 @@
+{
+  "tomato": {
+    "label": "Tomato",
+    "prefix": "Tomato___",
+    "classes": [
+      "Tomato___Bacterial_spot",
+      "Tomato___Early_blight",
+      "Tomato___Late_blight",
+      "Tomato___Leaf_Mold",
+      "Tomato___Septoria_leaf_spot",
+      "Tomato___Spider_mites Two-spotted_spider_mite",
+      "Tomato___Target_Spot",
+      "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+      "Tomato___Tomato_mosaic_virus",
+      "Tomato___healthy"
+    ],
+    "coverage": "healthy_and_diseases",
+    "note": "Predictions are restricted to the listed classes for this crop. Other conditions may be misclassified."
+  },
+  "maize": {
+    "label": "Maize",
+    "prefix": "Corn_(maize)___",
+    "classes": [
+      "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "Corn_(maize)___Common_rust_",
+      "Corn_(maize)___Northern_Leaf_Blight",
+      "Corn_(maize)___healthy"
+    ],
+    "coverage": "healthy_and_diseases",
+    "note": "Predictions are restricted to the listed classes for this crop. Other conditions may be misclassified."
+  },
+  "pepper": {
+    "label": "Bell pepper",
+    "prefix": "Pepper,_bell___",
+    "classes": [
+      "Pepper,_bell___Bacterial_spot",
+      "Pepper,_bell___healthy"
+    ],
+    "coverage": "healthy_and_diseases",
+    "note": "Predictions are restricted to the listed classes for this crop. Other conditions may be misclassified."
+  },
+  "potato": {
+    "label": "Potato",
+    "prefix": "Potato___",
+    "classes": [
+      "Potato___Early_blight",
+      "Potato___Late_blight",
+      "Potato___healthy"
+    ],
+    "coverage": "healthy_and_diseases",
+    "note": "Predictions are restricted to the listed classes for this crop. Other conditions may be misclassified."
+  },
+  "apple": {
+    "label": "Apple",
+    "prefix": "Apple___",
+    "classes": [
+      "Apple___Apple_scab",
+      "Apple___Black_rot",
+      "Apple___Cedar_apple_rust",
+      "Apple___healthy"
+    ],
+    "coverage": "healthy_and_diseases",
+    "note": "Predictions are restricted to the listed classes for this crop. Other conditions may be misclassified."
+  },
+  "grape": {
+    "label": "Grape",
+    "prefix": "Grape___",
+    "classes": [
+      "Grape___Black_rot",
+      "Grape___Esca_(Black_Measles)",
+      "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)",
+      "Grape___healthy"
+    ],
+    "coverage": "healthy_and_diseases",
+    "note": "Predictions are restricted to the listed classes for this crop. Other conditions may be misclassified."
+  },
+  "cherry": {
+    "label": "Cherry (including sour)",
+    "prefix": "Cherry_(including_sour)___",
+    "classes": [
+      "Cherry_(including_sour)___Powdery_mildew",
+      "Cherry_(including_sour)___healthy"
+    ],
+    "coverage": "healthy_and_diseases",
+    "note": "Predictions are restricted to the listed classes for this crop. Other conditions may be misclassified."
+  },
+  "peach": {
+    "label": "Peach",
+    "prefix": "Peach___",
+    "classes": [
+      "Peach___Bacterial_spot",
+      "Peach___healthy"
+    ],
+    "coverage": "healthy_and_diseases",
+    "note": "Predictions are restricted to the listed classes for this crop. Other conditions may be misclassified."
+  },
+  "strawberry": {
+    "label": "Strawberry",
+    "prefix": "Strawberry___",
+    "classes": [
+      "Strawberry___Leaf_scorch",
+      "Strawberry___healthy"
+    ],
+    "coverage": "healthy_and_diseases",
+    "note": "Predictions are restricted to the listed classes for this crop. Other conditions may be misclassified."
+  },
+  "orange": {
+    "label": "Orange",
+    "prefix": "Orange___",
+    "classes": [
+      "Orange___Haunglongbing_(Citrus_greening)"
+    ],
+    "coverage": "disease_only",
+    "note": "This crop has only one disease class and no healthy reference. A match cannot confirm disease or rule out other conditions."
+  },
+  "squash": {
+    "label": "Squash",
+    "prefix": "Squash___",
+    "classes": [
+      "Squash___Powdery_mildew"
+    ],
+    "coverage": "disease_only",
+    "note": "This crop has only one disease class and no healthy reference. A match cannot confirm disease or rule out other conditions."
+  },
+  "soybean": {
+    "label": "Soybean",
+    "prefix": "Soybean___",
+    "classes": [
+      "Soybean___healthy"
+    ],
+    "coverage": "healthy_only",
+    "note": "This crop has only a healthy reference class. The model cannot identify its diseases or confirm that a leaf is healthy."
+  },
+  "blueberry": {
+    "label": "Blueberry",
+    "prefix": "Blueberry___",
+    "classes": [
+      "Blueberry___healthy"
+    ],
+    "coverage": "healthy_only",
+    "note": "This crop has only a healthy reference class. The model cannot identify its diseases or confirm that a leaf is healthy."
+  },
+  "raspberry": {
+    "label": "Raspberry",
+    "prefix": "Raspberry___",
+    "classes": [
+      "Raspberry___healthy"
+    ],
+    "coverage": "healthy_only",
+    "note": "This crop has only a healthy reference class. The model cannot identify its diseases or confirm that a leaf is healthy."
+  }
+}
