@@ -29,7 +29,7 @@
                     <select id="crop" name="crop" required aria-describedby="crop-help" class="mt-2 w-full rounded-xl border border-stone-300 bg-white p-3 text-slate-900 focus:ring-2 focus:ring-emerald-600">
                         <option value="">Select a crop</option>
                         @foreach(config('crops') as $key => $crop)
-                            <option value="{{ $key }}" @selected(old('crop') === $key)>{{ $crop['label'] }}{{ $crop['coverage'] !== 'healthy_and_diseases' ? ' â€” limited coverage' : '' }}</option>
+                            <option value="{{ $key }}" @selected(old('crop') === $key)>{{ $crop['label'] }}{{ $crop['coverage'] !== 'healthy_and_diseases' ? ' (limited coverage)' : '' }}</option>
                         @endforeach
                     </select>
                     <p id="crop-help" aria-live="polite" class="mb-5 mt-2 text-sm text-slate-500">Choose a supported crop before uploading. Pepper supports bell pepper only.</p>
