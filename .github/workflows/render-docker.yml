@@ -1,0 +1,50 @@
+name: Render Docker smoke test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/crop-detection-foundation]
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - render.yaml
+      - render.persistent.yaml
+      - deploy/**
+      - composer.json
+      - composer.lock
+      - package.json
+      - package-lock.json
+      - ai-service/main.py
+      - ai-service/crops.json
+      - ai-service/requirements.txt
+      - bootstrap/app.php
+      - config/**
+      - app/Http/Controllers/**
+      - app/Providers/**
+      - app/Models/**
+      - app/Console/**
+      - app/Http/Middleware/**
+      - routes/**
+      - database/migrations/**
+      - resources/**
+      - .github/workflows/render-docker.yml
+
+permissions:
+  contents: read
+
+jobs:
+  docker-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Build CPU inference image and verify pretrained model
+        run: docker build --progress=plain -t crop-disease-render .
+      - name: Verify real upload, readiness, SQLite and restart persistence
+        run: python3 deploy/smoke_test.py --image crop-disease-render
+      - name: Assess free-sized instance with 512 MiB and 0.1 CPU
+        id: free-size
+        continue-on-error: true
+        run: python3 deploy/smoke_test.py --image crop-disease-render --memory 512m --cpus 0.1

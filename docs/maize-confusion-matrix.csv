@@ -1,0 +1,5 @@
+actual/predicted,Healthy,Common rust,Northern leaf blight,Gray leaf spot
+Healthy,4,5,1,0
+Common rust,0,8,0,2
+Northern leaf blight,0,3,6,1
+Gray leaf spot,1,8,1,0

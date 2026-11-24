@@ -9,3 +9,6 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+# Startup scripts must remain executable by a Linux shell after Windows edits.
+*.sh text eol=lf

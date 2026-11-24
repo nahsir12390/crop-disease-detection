@@ -1,0 +1,38 @@
+# Durable SQLite; paid compute + disk, no Render Postgres resource.
+services:
+  - type: web
+    name: crop-disease-detection
+    runtime: docker
+    branch: feature/crop-detection-foundation
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: 1c-2g
+    region: frankfurt
+    numInstances: 1
+    healthCheckPath: /healthz
+    autoDeployTrigger: "off"
+    disk:
+      name: crop-sqlite
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: APP_NAME
+        value: Crop Disease Detection
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: DATA_DIR
+        value: /var/data
+      - key: DB_DATABASE
+        value: /var/data/database.sqlite
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: FORCE_HTTPS
+        value: "true"
+      - key: TRUSTED_PROXIES
+        value: "*"
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database

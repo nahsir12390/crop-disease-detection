@@ -1,0 +1,125 @@
+{
+  "baseline": {
+    "total": 40,
+    "correct": 18,
+    "accuracy": 0.45,
+    "macro_f1": 0.41764705882352937,
+    "per_class": {
+      "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
+        "support": 10,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0
+      },
+      "Corn_(maize)___Common_rust_": {
+        "support": 10,
+        "precision": 0.3333333333333333,
+        "recall": 0.8,
+        "f1": 0.47058823529411764
+      },
+      "Corn_(maize)___Northern_Leaf_Blight": {
+        "support": 10,
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6666666666666665
+      },
+      "Corn_(maize)___healthy": {
+        "support": 10,
+        "precision": 0.8,
+        "recall": 0.4,
+        "f1": 0.5333333333333333
+      }
+    },
+    "confusion_matrix": {
+      "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
+        "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": 0,
+        "Corn_(maize)___Common_rust_": 8,
+        "Corn_(maize)___Northern_Leaf_Blight": 1,
+        "Corn_(maize)___healthy": 1
+      },
+      "Corn_(maize)___Common_rust_": {
+        "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": 2,
+        "Corn_(maize)___Common_rust_": 8,
+        "Corn_(maize)___Northern_Leaf_Blight": 0,
+        "Corn_(maize)___healthy": 0
+      },
+      "Corn_(maize)___Northern_Leaf_Blight": {
+        "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": 1,
+        "Corn_(maize)___Common_rust_": 3,
+        "Corn_(maize)___Northern_Leaf_Blight": 6,
+        "Corn_(maize)___healthy": 0
+      },
+      "Corn_(maize)___healthy": {
+        "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": 0,
+        "Corn_(maize)___Common_rust_": 5,
+        "Corn_(maize)___Northern_Leaf_Blight": 1,
+        "Corn_(maize)___healthy": 4
+      }
+    }
+  },
+  "candidate": {
+    "total": 40,
+    "correct": 18,
+    "accuracy": 0.45,
+    "macro_f1": 0.41764705882352937,
+    "per_class": {
+      "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
+        "support": 10,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0
+      },
+      "Corn_(maize)___Common_rust_": {
+        "support": 10,
+        "precision": 0.3333333333333333,
+        "recall": 0.8,
+        "f1": 0.47058823529411764
+      },
+      "Corn_(maize)___Northern_Leaf_Blight": {
+        "support": 10,
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6666666666666665
+      },
+      "Corn_(maize)___healthy": {
+        "support": 10,
+        "precision": 0.8,
+        "recall": 0.4,
+        "f1": 0.5333333333333333
+      }
+    },
+    "confusion_matrix": {
+      "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
+        "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": 0,
+        "Corn_(maize)___Common_rust_": 8,
+        "Corn_(maize)___Northern_Leaf_Blight": 1,
+        "Corn_(maize)___healthy": 1
+      },
+      "Corn_(maize)___Common_rust_": {
+        "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": 2,
+        "Corn_(maize)___Common_rust_": 8,
+        "Corn_(maize)___Northern_Leaf_Blight": 0,
+        "Corn_(maize)___healthy": 0
+      },
+      "Corn_(maize)___Northern_Leaf_Blight": {
+        "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": 1,
+        "Corn_(maize)___Common_rust_": 3,
+        "Corn_(maize)___Northern_Leaf_Blight": 6,
+        "Corn_(maize)___healthy": 0
+      },
+      "Corn_(maize)___healthy": {
+        "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": 0,
+        "Corn_(maize)___Common_rust_": 5,
+        "Corn_(maize)___Northern_Leaf_Blight": 1,
+        "Corn_(maize)___healthy": 4
+      }
+    }
+  },
+  "checkpoint": "ai-service\\.model-cache\\training-runs\\pilot-01\\checkpoint",
+  "base_revision": "77e6d262dca53b818f7ad1d67088700754515639",
+  "dataset": "Diseases of maize in the field",
+  "doi": "https://doi.org/10.25403/UPresearchdata.20237613.v1",
+  "limitation": "Previously observed 40-image regression benchmark, not a new blind or independent test. Publisher training overlap cannot be completely ruled out.",
+  "confidence": "Candidate scores are uncalibrated. This comparison measures top-1 class accuracy, not diagnostic certainty.",
+  "deployed": false
+}

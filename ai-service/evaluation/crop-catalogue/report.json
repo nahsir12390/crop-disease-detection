@@ -1,0 +1,126 @@
+{
+  "model": "neghani/plantvillage-mobilenetv2",
+  "revision": "77e6d262dca53b818f7ad1d67088700754515639",
+  "dataset": "spMohanty/PlantVillage-Dataset",
+  "dataset_revision": "7f7ecc7e1eaca78107e3affe7cb5abd9427e139a",
+  "images": 114,
+  "correct": 112,
+  "by_crop": {
+    "tomato": {
+      "label": "Tomato",
+      "class_count": 10,
+      "coverage": "healthy_and_diseases",
+      "tested": 30,
+      "correct": 29,
+      "uncertain": 0
+    },
+    "maize": {
+      "label": "Maize",
+      "class_count": 4,
+      "coverage": "healthy_and_diseases",
+      "tested": 12,
+      "correct": 11,
+      "uncertain": 0
+    },
+    "pepper": {
+      "label": "Bell pepper",
+      "class_count": 2,
+      "coverage": "healthy_and_diseases",
+      "tested": 6,
+      "correct": 6,
+      "uncertain": 0
+    },
+    "potato": {
+      "label": "Potato",
+      "class_count": 3,
+      "coverage": "healthy_and_diseases",
+      "tested": 9,
+      "correct": 9,
+      "uncertain": 0
+    },
+    "apple": {
+      "label": "Apple",
+      "class_count": 4,
+      "coverage": "healthy_and_diseases",
+      "tested": 12,
+      "correct": 12,
+      "uncertain": 1
+    },
+    "grape": {
+      "label": "Grape",
+      "class_count": 4,
+      "coverage": "healthy_and_diseases",
+      "tested": 12,
+      "correct": 12,
+      "uncertain": 0
+    },
+    "cherry": {
+      "label": "Cherry (including sour)",
+      "class_count": 2,
+      "coverage": "healthy_and_diseases",
+      "tested": 6,
+      "correct": 6,
+      "uncertain": 0
+    },
+    "peach": {
+      "label": "Peach",
+      "class_count": 2,
+      "coverage": "healthy_and_diseases",
+      "tested": 6,
+      "correct": 6,
+      "uncertain": 0
+    },
+    "strawberry": {
+      "label": "Strawberry",
+      "class_count": 2,
+      "coverage": "healthy_and_diseases",
+      "tested": 6,
+      "correct": 6,
+      "uncertain": 0
+    },
+    "orange": {
+      "label": "Orange",
+      "class_count": 1,
+      "coverage": "disease_only",
+      "tested": 3,
+      "correct": 3,
+      "uncertain": 3
+    },
+    "squash": {
+      "label": "Squash",
+      "class_count": 1,
+      "coverage": "disease_only",
+      "tested": 3,
+      "correct": 3,
+      "uncertain": 3
+    },
+    "soybean": {
+      "label": "Soybean",
+      "class_count": 1,
+      "coverage": "healthy_only",
+      "tested": 3,
+      "correct": 3,
+      "uncertain": 3
+    },
+    "blueberry": {
+      "label": "Blueberry",
+      "class_count": 1,
+      "coverage": "healthy_only",
+      "tested": 3,
+      "correct": 3,
+      "uncertain": 3
+    },
+    "raspberry": {
+      "label": "Raspberry",
+      "class_count": 1,
+      "coverage": "healthy_only",
+      "tested": 3,
+      "correct": 3,
+      "uncertain": 3
+    }
+  },
+  "purpose": "Real-image preprocessing/routing/label coverage verification, not independent field accuracy.",
+  "overlap": "PlantVillage was used to train this pretrained model. Exact images may have been seen. Source photos are laboratory-style and do not establish field performance.",
+  "limited_class_caution": "A correct match for a single-class crop is not disease-detection accuracy; crop-restricted ranking has only one possible result.",
+  "training": "No model weights were trained or changed by this expansion."
+}
